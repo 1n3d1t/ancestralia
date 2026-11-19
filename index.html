@@ -197,9 +197,36 @@
   .song-art{position:relative;min-height:340px;background:#0a1512;overflow:hidden}
   .song-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
   .song-art .veil{position:absolute;inset:0}
-  .song-art .big-glyph{
-    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-    font-family:"Cormorant Garamond",serif;font-size:190px;color:rgba(236,226,203,.16);font-style:italic;
+  .song-art .art-bg{opacity:.6;filter:sepia(.3) saturate(1.08) contrast(1.02)}
+  .song-art .art-frame{
+    position:absolute;inset:12px;border:1.5px solid rgba(201,168,106,.7);
+    outline:1px solid rgba(201,168,106,.32);outline-offset:5px;pointer-events:none;z-index:3;
+  }
+  .song-art .art-medallion{
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-56%);
+    width:176px;height:176px;border-radius:50%;z-index:2;
+    display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(circle at 50% 38%, rgba(233,214,164,.22), rgba(10,21,18,.88) 68%);
+    border:2px solid var(--sc,var(--gold));
+    box-shadow:0 0 0 6px rgba(10,21,18,.45), 0 0 34px var(--sc,var(--gold)), inset 0 0 26px rgba(0,0,0,.55);
+  }
+  .song-art .art-medallion::before{
+    content:"";position:absolute;inset:9px;border-radius:50%;
+    border:1px dashed rgba(232,201,135,.55);animation:spin 70s linear infinite;
+  }
+  .song-art .art-medallion::after{
+    content:"";position:absolute;left:50%;bottom:-7px;transform:translateX(-50%);
+    width:13px;height:13px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #aef3e4, #12a594 60%, #0b6e5f);
+    border:1.5px solid rgba(232,201,135,.85);box-shadow:0 0 12px rgba(87,199,178,.8);
+  }
+  .song-art .art-medallion .glyph{
+    font-family:"Cormorant Garamond",serif;font-style:italic;font-size:88px;line-height:1;
+    color:var(--gold-bright);text-shadow:0 2px 18px rgba(0,0,0,.65), 0 0 22px var(--sc,var(--gold));
+  }
+  .song-art .art-medallion .med-num{
+    position:absolute;top:16px;left:0;right:0;text-align:center;
+    font-size:10.5px;letter-spacing:.3em;color:rgba(236,226,203,.75);text-transform:uppercase;
   }
   .song-art .art-cap{
     position:absolute;left:20px;bottom:16px;right:20px;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:rgba(236,226,203,.85);
@@ -234,22 +261,47 @@
   .listen-note b{color:var(--ink)}
   @media (max-width:860px){ .song-view{grid-template-columns:1fr} .song-art{min-height:250px} .song-body{padding:28px 22px} }
 
-  /* ---------- map ---------- */
+  /* ---------- map : pergamino antiguo ---------- */
   .map-stage{
-    margin-top:28px;border:1px solid var(--line-soft);border-radius:20px;overflow:hidden;position:relative;
+    margin-top:28px;border-radius:18px;overflow:hidden;position:relative;
+    border:3px solid #6d5326;
+    box-shadow:0 0 0 1px rgba(232,201,135,.35), inset 0 0 0 6px #2e2413, inset 0 0 90px rgba(101,67,20,.5), 0 24px 60px rgba(0,0,0,.45);
     background:
-      radial-gradient(ellipse 80% 70% at 30% 20%, rgba(38,84,110,.20), transparent 60%),
-      radial-gradient(ellipse 60% 60% at 75% 80%, rgba(46,125,110,.14), transparent 60%),
-      #081118;
+      radial-gradient(ellipse 90% 80% at 50% 38%, rgba(255,246,205,.55), transparent 62%),
+      radial-gradient(ellipse 60% 50% at 88% 92%, rgba(146,102,38,.38), transparent 65%),
+      radial-gradient(ellipse 50% 42% at 6% 6%, rgba(146,102,38,.32), transparent 60%),
+      radial-gradient(ellipse 34% 26% at 72% 22%, rgba(146,102,38,.20), transparent 70%),
+      linear-gradient(160deg,#ecd9a8 0%,#e0c78f 46%,#d2b677 100%);
   }
-  #mapSvg{display:block;width:100%;height:auto}
-  .map-route{fill:none;stroke:rgba(87,199,178,.4);stroke-width:1.6;stroke-dasharray:5 6;animation:dashmove 26s linear infinite}
+  .map-stage::before{
+    content:"";position:absolute;inset:11px;border:1.5px solid rgba(109,83,38,.75);
+    outline:1px solid rgba(109,83,38,.4);outline-offset:4px;pointer-events:none;z-index:2;
+  }
+  .map-stage::after{
+    content:"";position:absolute;inset:0;pointer-events:none;z-index:2;
+    background:
+      radial-gradient(circle 7px at 22px 22px, #7df0dc 0 2.5px, #0e9594 3.5px 6px, rgba(109,83,38,.9) 6.5px 7.5px, transparent 8.5px),
+      radial-gradient(circle 7px at calc(100% - 22px) 22px, #7df0dc 0 2.5px, #0e9594 3.5px 6px, rgba(109,83,38,.9) 6.5px 7.5px, transparent 8.5px),
+      radial-gradient(circle 7px at 22px calc(100% - 22px), #7df0dc 0 2.5px, #0e9594 3.5px 6px, rgba(109,83,38,.9) 6.5px 7.5px, transparent 8.5px),
+      radial-gradient(circle 7px at calc(100% - 22px) calc(100% - 22px), #7df0dc 0 2.5px, #0e9594 3.5px 6px, rgba(109,83,38,.9) 6.5px 7.5px, transparent 8.5px);
+  }
+  #mapSvg{display:block;width:100%;height:auto;position:relative;z-index:1}
+  .map-land{fill:rgba(150,106,44,.15);stroke:rgba(96,66,24,.55);stroke-width:1.6;stroke-linejoin:round}
+  .map-rhumb{stroke:rgba(96,66,24,.15);stroke-width:1}
+  .map-dna{fill:none;stroke:rgba(96,66,24,.20);stroke-width:2.4}
+  .map-dna-rung{stroke:rgba(96,66,24,.16);stroke-width:1.6}
+  .map-sea{font-family:"Manrope",sans-serif;letter-spacing:.42em;fill:rgba(96,66,24,.5);text-transform:uppercase}
+  .map-song{font-family:"Cormorant Garamond",serif;font-style:italic;fill:#5a3d16;cursor:pointer}
+  .map-song:hover,.map-song:focus{fill:#0b6e5f;text-decoration:underline}
+  .map-ship{stroke:rgba(90,61,22,.75);fill:rgba(150,106,44,.18);stroke-width:1.6;stroke-linejoin:round}
+  .map-rose{stroke:rgba(96,66,24,.7);fill:rgba(185,141,62,.5)}
+  .map-route{fill:none;stroke:rgba(11,110,95,.55);stroke-width:1.6;stroke-dasharray:5 6;animation:dashmove 26s linear infinite}
   @keyframes dashmove{to{stroke-dashoffset:-440}}
   .map-place{cursor:pointer}
-  .map-place circle.ring{fill:rgba(201,168,106,.10);stroke:var(--gold);stroke-width:1.2}
-  .map-place circle.dot{fill:var(--gold-bright)}
-  .map-place text{fill:var(--ink);font-family:"Cormorant Garamond",serif;font-size:23px;pointer-events:none}
-  .map-place:hover circle.ring,.map-place.active circle.ring{fill:rgba(87,199,178,.18);stroke:var(--teal)}
+  .map-place circle.ring{fill:rgba(255,248,220,.7);stroke:#7a5a1e;stroke-width:2}
+  .map-place circle.dot{fill:#0e9594}
+  .map-place text{fill:#3d2a0e;font-family:"Cormorant Garamond",serif;font-size:23px;font-weight:600;pointer-events:none}
+  .map-place:hover circle.ring,.map-place.active circle.ring{fill:rgba(125,240,220,.5);stroke:#0b6e5f}
   .map-panel{
     margin-top:16px;border:1px solid var(--line-soft);border-radius:var(--radius);background:var(--panel);
     padding:24px 26px;display:none;scroll-margin-top:84px;scroll-margin-bottom:230px;
@@ -453,6 +505,17 @@
   .spotify-block p{color:var(--ink-dim);font-weight:300;margin:0 0 18px;max-width:660px}
   .spotify-block iframe{width:100%;height:352px;border:0;border-radius:12px;display:block;background:#0a1512}
   @media (max-width:640px){ .spotify-block{padding:22px 18px} .spotify-block iframe{height:232px} }
+  #spotifyUnico{scroll-margin-top:96px}
+  .nova-ig{margin-top:26px !important;font-size:15.5px !important}
+  .nova-ig a{color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(87,199,178,.4)}
+  .nova-ig a:hover{color:var(--gold-bright);border-color:var(--gold)}
+  footer .fsocial{margin-top:14px}
+  footer .fsocial a{
+    display:inline-flex;align-items:center;gap:9px;color:var(--ink-dim);text-decoration:none;
+    border:1px solid var(--line);border-radius:99px;padding:9px 18px;font-size:14px;letter-spacing:.04em;min-height:44px;
+  }
+  footer .fsocial a:hover{color:var(--gold-bright);border-color:var(--gold)}
+  footer .fsocial svg{flex:none}
   .spotify-embed{max-width:680px;margin:34px auto 0;text-align:left}
   .spotify-embed .sp-cap{display:block;font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:10px;text-align:center}
   .spotify-embed iframe{width:100%;height:152px;border:0;border-radius:12px;display:block;background:#0a1512}
@@ -461,6 +524,7 @@
   .reduced-motion .hero-emblem{animation:none}
   .reduced-motion .map-route{animation:none}
   .reduced-motion .eq i{animation:none;height:10px}
+  .reduced-motion .song-art .art-medallion::before{animation:none}
   .reduced-motion .emblem-ring,.reduced-motion .emblem-glow,
   .reduced-motion .uni-root.minor,
   .reduced-motion .node.playing circle.core,.reduced-motion .node.active circle.core,
@@ -473,6 +537,7 @@
   @media (prefers-reduced-motion: reduce){
     html{scroll-behavior:auto}
     .hero-emblem,.map-route,.eq i,.emblem-ring,.emblem-glow,.uni-root.minor,
+    .song-art .art-medallion::before,
     .node.playing circle.core,.node.active circle.core,
     .hero h1,.hero .author,.hero .lede,.hero .hero-cta,.hero .hero-scroll{animation:none}
     .rv{opacity:1;transform:none;transition:none}
@@ -513,7 +578,7 @@
   <div class="hero-cta">
     <a class="btn btn-solid" href="#universo">Entrar en el universo</a>
     <button class="btn btn-ghost" id="heroPlay" type="button">▶ Comenzar la escucha</button>
-    <a class="btn btn-ghost btn-spotify" href="#albumSpotify">Escuchar el álbum aquí</a>
+    <a class="btn btn-ghost btn-spotify" href="#spotifyUnico">Escuchar el álbum aquí</a>
   </div>
   <p class="hero-scroll">Desciende por las raíces</p>
 </section>
@@ -546,11 +611,6 @@
       <div class="rule"></div>
     </div>
     <article class="song-view" id="songView" aria-live="polite"></article>
-    <div class="spotify-block" id="albumSpotify">
-      <h3>El álbum completo, sonando aquí</h3>
-      <p>Reproductor de Spotify integrado en la propia página: escucha las doce composiciones sin salir de la instalación. Con tu sesión de Spotify abierta suenan los temas completos; sin ella, una muestra de cada uno.</p>
-      <iframe src="https://open.spotify.com/embed/album/0h66VYMTglXQpvGmgoTW8b?utm_source=generator&theme=0" title="Reproductor de Spotify: álbum Ancestralia, de Javier Rubio" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-    </div>
   </div>
 </section>
 
@@ -560,7 +620,7 @@
     <div class="sec-head">
       <span class="num">Cartografía viva</span>
       <h2>El mapa de las raíces y las migraciones</h2>
-      <p>No es un mapa turístico ni una lección de historia: es la geografía emocional del álbum. Seis territorios unidos por rutas de luz. Elige un lugar y descubre qué canciones nacen de él.</p>
+      <p>No es un mapa turístico ni una lección de historia: es la geografía emocional del álbum, dibujada como el mapa antiguo que vive detrás del emblema de la portada —pergamino, rosa de los vientos y los doce títulos escritos sobre las costas—. Elige un territorio, o toca un título sobre el mapa, y descubre qué canciones nacen de él.</p>
       <div class="rule"></div>
     </div>
     <div class="map-stage">
@@ -610,7 +670,7 @@
       <figure class="sg-d"><img src="assets/estudio4.jpg" alt="Primer plano de Javier Rubio sonriendo mientras trabaja en su estudio, con un monitor de estudio y la sesión del DAW al fondo" /><figcaption>Javier Rubio, autor de Ancestralia.</figcaption></figure>
     </div>
     <div class="steps">
-      <div class="step"><b>Las ideas musicales</b><p>Melodías y atmósferas nacidas de instrumentos reales —guitarra, handpan, percusiones del mundo, acordeón— y de la memoria de los territorios que recorre el álbum.</p></div>
+      <div class="step"><b>Las ideas musicales</b><p>Melodías y atmósferas que buscan la esencia de cada región a través de sus propios instrumentos: la guitarra, las flautas, las percusiones del mundo o el acordeón llevan la voz principal, a veces fusionando unas culturas con otras. Junto a ellos conviven el handpan, los sintetizadores y las guitarras eléctricas, que aportan el aire contemporáneo del viaje.</p></div>
       <div class="step"><b>La experimentación con IA</b><p>Generación y exploración de texturas, voces y universos visuales con inteligencia artificial, seleccionados y dirigidos criterio a criterio por el autor.</p></div>
       <div class="step"><b>La producción en el DAW</b><p>Grabación, edición, mezcla y máster en la estación de trabajo digital: el punto donde lo orgánico y lo tecnológico terminan de fundirse.</p></div>
       <div class="step"><b>Los universos visuales</b><p>Cada canción desarrolla su propia identidad visual —como la ilustración de «Aljamía»— para que el álbum pueda también contemplarse, no solo escucharse.</p></div>
@@ -629,7 +689,8 @@
       <button class="btn btn-solid" id="novaPlay" type="button">Escuchar Nova Ancestralia</button>
       <a class="btn btn-ghost" href="#universo">Volver al universo</a>
     </div>
-    <div class="spotify-embed">
+    <p class="nova-ig">Sigue el viaje y el proceso de Javier Rubio en Instagram: <a href="https://www.instagram.com/javierrubio_inedit" target="_blank" rel="noopener">@javierrubio_inedit</a></p>
+    <div class="spotify-embed" id="spotifyUnico">
       <span class="sp-cap">El álbum completo en Spotify · sin salir de la página</span>
       <iframe src="https://open.spotify.com/embed/album/0h66VYMTglXQpvGmgoTW8b?utm_source=generator&theme=0" title="Reproductor de Spotify: álbum Ancestralia, de Javier Rubio" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
@@ -639,6 +700,7 @@
 <footer>
   <p class="fbrand">Ancestralia</p>
   <p>Álbum conceptual de Javier Rubio · Doce composiciones · Raíces — Migraciones — Encuentros — Nova Ancestralia</p>
+  <p class="fsocial"><a href="https://www.instagram.com/javierrubio_inedit" target="_blank" rel="noopener" aria-label="Instagram de Javier Rubio: @javierrubio_inedit"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.15" fill="currentColor" stroke="none"/></svg>@javierrubio_inedit</a></p>
   <p>La música suena desde YouTube: vídeos del <a href="https://youtube.com/@inedit-music" target="_blank" rel="noopener">canal del autor</a> cuando el tema tiene vídeo propio, y de la <a href="https://youtube.com/playlist?list=OLAK5uy_mGTU3evU5lqQ050Twn6yLC7jr8lElFS0s&si=wINXPa1GmM-w7eB3" target="_blank" rel="noopener">lista oficial del álbum</a> en los demás casos. El álbum completo, también en <a href="https://open.spotify.com/album/0h66VYMTglXQpvGmgoTW8b" target="_blank" rel="noopener">Spotify</a>.</p>
 </footer>
 
@@ -691,7 +753,7 @@
     <time id="tDur">0:00</time>
   </div>
   <button class="p-btn" id="pVideoBtn" type="button" aria-label="Mostrar u ocultar el vídeo" title="Vídeo"><svg viewBox="0 0 24 24"><path d="M21 6.5l-4 2v-2c0-.6-.4-1-1-1H4c-.6 0-1 .4-1 1v11c0 .6.4 1 1 1h12c.6 0 1-.4 1-1v-2l4 2v-11zM10 15.5v-7l6 3.5-6 3.5z"/></svg></button>
-  <a class="p-spotify" href="#albumSpotify" title="Abrir el reproductor de Spotify integrado">Spotify</a>
+  <a class="p-spotify" href="#spotifyUnico" title="Abrir el reproductor de Spotify integrado">Spotify</a>
   <div class="p-vol">
     <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg>
     <input class="vol" id="pVol" type="range" min="0" max="100" value="80" aria-label="Volumen" />
@@ -886,8 +948,11 @@ function openSong(i, scroll){
   nodeEls.forEach(function(n,k){ n.classList.toggle("active", k===i); });
   chipEls.forEach(function(c,k){ c.classList.toggle("active", k===i); });
   var art = s.img
-    ? '<img src="'+s.img+'" alt="" /><div class="veil" style="background:linear-gradient(200deg, transparent 40%, rgba(6,13,12,.55))"></div><p class="art-cap">'+s.imgCap+'</p>'
-    : '<div class="veil" style="background:radial-gradient(ellipse 80% 70% at 30% 20%, '+s.color+'33, transparent 60%), radial-gradient(ellipse 70% 80% at 80% 90%, rgba(46,125,110,.35), transparent 60%), #0a1512"></div><div class="big-glyph" aria-hidden="true">'+s.glyph+'</div><p class="art-cap">'+s.territory+'</p>';
+    ? '<img src="'+s.img+'" alt="" /><div class="veil" style="background:linear-gradient(200deg, transparent 40%, rgba(6,13,12,.55))"></div><div class="art-frame" aria-hidden="true"></div><p class="art-cap">'+s.imgCap+'</p>'
+    : '<img class="art-bg" src="assets/portada.jpg" alt="" />'+
+      '<div class="veil" style="background:radial-gradient(ellipse 85% 75% at 30% 18%, '+s.color+'40, transparent 62%), radial-gradient(ellipse 75% 85% at 82% 92%, rgba(46,125,110,.38), transparent 62%), linear-gradient(200deg, rgba(6,13,12,.28), rgba(6,13,12,.72))"></div>'+
+      '<div class="art-medallion" style="--sc:'+s.color+'" aria-hidden="true"><span class="med-num">Nº '+(i+1)+' · 12</span><span class="glyph">'+s.glyph+'</span></div>'+
+      '<div class="art-frame" aria-hidden="true"></div><p class="art-cap">'+s.territory+'</p>';
   var conn = s.conn.map(function(j){
     return '<button type="button" class="conn-chip" data-conn="'+j+'"><i style="color:'+SONGS[j].color+';background:'+SONGS[j].color+'"></i>'+SONGS[j].title+'</button>';
   }).join("");
@@ -910,12 +975,12 @@ function openSong(i, scroll){
       '<div class="conn-row"><h4>Conecta con</h4><div class="conn-chips">'+conn+'</div></div>'+
       '<div class="song-actions">'+
         '<button type="button" class="btn btn-play-song" id="svPlay">▶ Escuchar esta composición</button>'+
-        '<a class="btn btn-ghost btn-spotify" href="#albumSpotify">Escuchar en Spotify aquí</a>'+
+        '<a class="btn btn-ghost btn-spotify" href="#spotifyUnico">Escuchar en Spotify aquí</a>'+
         '<a class="btn btn-ghost" href="https://www.youtube.com/watch?v='+s.yt+'" target="_blank" rel="noopener">Ver en YouTube</a>'+
         '<button type="button" class="btn btn-ghost" id="svPrev">← Anterior</button>'+
         '<button type="button" class="btn btn-ghost" id="svNext">Siguiente →</button>'+
       '</div>'+
-      '<p class="listen-note" style="margin-top:16px"><b>La música es la real.</b> Pulsa la miniatura para ver y oír el vídeo oficial aquí mismo, sin salir de la página. Con «Escuchar esta composición», la música te acompaña desde el reproductor inferior mientras sigues recorriendo la instalación. Cada tema suena con el vídeo del canal del autor (Inedit-Music) cuando tiene vídeo propio, y con el de la lista oficial del álbum en los demás casos. Y justo debajo de esta ficha tienes el álbum entero en el reproductor de Spotify, también sin salir de la página.</p>'+
+      '<p class="listen-note" style="margin-top:16px"><b>La música es la real.</b> Pulsa la miniatura para ver y oír el vídeo oficial aquí mismo, sin salir de la página. Con «Escuchar esta composición», la música te acompaña desde el reproductor inferior mientras sigues recorriendo la instalación. Cada tema suena con el vídeo del canal del autor (Inedit-Music) cuando tiene vídeo propio, y con el de la lista oficial del álbum en los demás casos. Y al final del recorrido, en Nova Ancestralia, tienes el álbum entero en el reproductor de Spotify, también sin salir de la página.</p>'+
     '</div>';
   songView.querySelectorAll("[data-conn]").forEach(function(ch){
     ch.addEventListener("click", function(){ openSong(parseInt(ch.getAttribute("data-conn"),10), false);
@@ -964,9 +1029,87 @@ var mapSvg = document.getElementById("mapSvg");
 var mapPanel = document.getElementById("mapPanel");
 var placeEls = [];
 (function buildMap(){
-  /* faint coastline suggestion: abstract contour paths */
-  var coast = "M120 90 Q300 40 470 80 Q640 40 830 110 Q940 160 900 260 Q950 380 820 450 Q640 520 430 470 Q240 510 140 420 Q60 330 90 210 Q100 130 120 90 Z";
-  mapSvg.appendChild(el("path",{d:coast, fill:"rgba(87,199,178,.04)", stroke:"rgba(201,168,106,.18)", "stroke-width":1.2}));
+  /* ===== pergamino: tierras, rumbos, hélice, rosa, barcos y títulos ===== */
+  var lands = [
+    "M300 152 Q288 92 350 56 Q428 28 502 58 Q548 84 522 132 Q500 168 452 162 Q420 188 378 172 Q328 178 300 152 Z",
+    "M250 252 Q260 206 332 196 Q422 186 480 216 Q506 252 480 300 Q470 346 400 352 Q320 358 274 322 Q244 296 250 252 Z",
+    "M560 172 Q602 150 642 176 Q622 212 642 252 Q668 302 640 332 Q614 322 604 276 Q590 232 560 206 Q544 188 560 172 Z",
+    "M320 432 Q340 392 432 386 Q542 380 612 406 Q642 442 600 472 Q500 498 390 482 Q328 472 320 432 Z",
+    "M35 322 Q92 296 166 310 Q188 322 162 342 Q96 358 44 342 Q24 334 35 322 Z"
+  ];
+  lands.forEach(function(d){ mapSvg.appendChild(el("path",{d:d, "class":"map-land"})); });
+  /* rhumb lines fanning from the compass rose */
+  [[872,108,120,470],[872,108,300,60],[872,108,60,180],[872,108,430,505],[872,108,985,300],[872,108,180,90]].forEach(function(l){
+    mapSvg.appendChild(el("line",{x1:l[0], y1:l[1], x2:l[2], y2:l[3], "class":"map-rhumb"}));
+  });
+  /* DNA helix watermark, like the author's test background */
+  var dna = el("g",{transform:"translate(505,282)"});
+  dna.appendChild(el("path",{d:"M0 -128 C 46 -96, -46 -64, 0 -32 C 46 0, -46 32, 0 64 C 46 96, -46 112, 0 128", "class":"map-dna"}));
+  dna.appendChild(el("path",{d:"M0 -128 C -46 -96, 46 -64, 0 -32 C -46 0, 46 32, 0 64 C -46 96, 46 112, 0 128", "class":"map-dna"}));
+  [-112,-80,-48,-16,16,48,80,112].forEach(function(y){
+    dna.appendChild(el("line",{x1:-17, y1:y, x2:17, y2:y, "class":"map-dna-rung"}));
+  });
+  mapSvg.appendChild(dna);
+  /* sea names */
+  var sea1 = el("text",{x:128, y:238, "class":"map-sea", "font-size":"12.5", transform:"rotate(-90 128 238)", "text-anchor":"middle"});
+  sea1.textContent = "Océano Atlántico"; mapSvg.appendChild(sea1);
+  var sea2 = el("text",{x:700, y:392, "class":"map-sea", "font-size":"12.5", "text-anchor":"middle"});
+  sea2.textContent = "Mar Mediterráneo"; mapSvg.appendChild(sea2);
+  /* period ships */
+  function ship(x,y,s){
+    var g = el("g",{transform:"translate("+x+","+y+") scale("+s+")", "class":"map-ship"});
+    g.appendChild(el("path",{d:"M-26 10 L26 10 L18 22 L-16 22 Z"}));
+    g.appendChild(el("line",{x1:-4, y1:10, x2:-4, y2:-24}));
+    g.appendChild(el("line",{x1:12, y1:10, x2:12, y2:-16}));
+    g.appendChild(el("path",{d:"M-4 -24 L-4 -4 L-18 -4 Z"}));
+    g.appendChild(el("path",{d:"M-4 -24 L10 -4 L-4 -4 Z"}));
+    g.appendChild(el("path",{d:"M12 -16 L12 -4 L2 -4 Z"}));
+    return g;
+  }
+  mapSvg.appendChild(ship(196,428,1));
+  mapSvg.appendChild(ship(758,448,0.8));
+  /* compass rose */
+  var rose = el("g",{transform:"translate(872,108)"});
+  rose.appendChild(el("circle",{r:52, fill:"none", "class":"map-rose", "stroke-width":1.4}));
+  rose.appendChild(el("circle",{r:42, fill:"none", "class":"map-rose", "stroke-width":.8}));
+  [[0,-46],[46,0],[0,46],[-46,0],[33,-33],[33,33],[-33,33],[-33,-33]].forEach(function(p,i){
+    var diag = i>=4, len = diag?0.55:1, w = diag?5:7;
+    var px = p[0]*len, py = p[1]*len;
+    var ang = Math.atan2(py,px), a1 = ang+Math.PI/2, a2 = ang-Math.PI/2;
+    var pts = "0,0 "+(Math.cos(a1)*w)+","+(Math.sin(a1)*w)+" "+px+","+py+" "+(Math.cos(a2)*w)+","+(Math.sin(a2)*w);
+    rose.appendChild(el("polygon",{points:pts, fill: diag?"rgba(185,141,62,.35)":"rgba(122,90,30,.75)", stroke:"rgba(96,66,24,.6)", "stroke-width":.8}));
+  });
+  var gem = el("circle",{r:6.5, fill:"#12a594", stroke:"rgba(96,66,24,.8)", "stroke-width":1.2});
+  rose.appendChild(gem);
+  [["N",0,-62],["E",64,5],["S",0,72],["O",-64,5]].forEach(function(L){
+    var t = el("text",{x:L[1], y:L[2], "text-anchor":"middle", fill:"#5a3d16", "font-family":"Cormorant Garamond, serif", "font-size":"17", "font-weight":"600"});
+    t.textContent = L[0]; rose.appendChild(t);
+  });
+  mapSvg.appendChild(rose);
+  /* the twelve titles written over the geography (correct spellings) */
+  var TITLES = [
+    {t:"Ancestralia", s:0, x:498, y:38, size:29, anchor:"middle"},
+    {t:"Nova Ancestralia", s:11, x:726, y:52, size:22, anchor:"middle"},
+    {t:"Anaoudek", s:7, x:316, y:98, size:22, anchor:"middle"},
+    {t:"Mareas cruzadas", s:2, x:140, y:200, size:21, anchor:"middle"},
+    {t:"Praias de mil areias", s:8, x:150, y:258, size:20, anchor:"middle", t2:"/ Iroise"},
+    {t:"La línea de la vida", s:3, x:618, y:138, size:21, anchor:"middle"},
+    {t:"Maletas de cartón", s:6, x:474, y:224, size:20, anchor:"middle"},
+    {t:"Racó de món", s:4, x:566, y:284, size:20, anchor:"start"},
+    {t:"Ha da passa' 'a nuttata", s:5, x:724, y:206, size:20, anchor:"middle"},
+    {t:"Aljamía", s:1, x:548, y:366, size:22, anchor:"middle"},
+    {t:"S'esvaeix", s:10, x:676, y:352, size:20, anchor:"middle"},
+    {t:"Frases de agua y sal", s:9, x:222, y:474, size:21, anchor:"middle"}
+  ];
+  TITLES.forEach(function(L){
+    var t = el("text",{x:L.x, y:L.y, "text-anchor":L.anchor, "class":"map-song", "font-size":L.size, tabindex:"0", role:"button",
+      "aria-label":"Abrir la ficha de "+SONGS[L.s].title});
+    t.textContent = L.t;
+    if(L.t2){ var ts = el("tspan",{x:L.x, dy:19, "font-size":L.size-3.5}); ts.textContent = L.t2; t.appendChild(ts); }
+    t.addEventListener("click", function(){ openSong(L.s, true); });
+    t.addEventListener("keydown", function(ev){ if(ev.key==="Enter"||ev.key===" "){ ev.preventDefault(); openSong(L.s,true); } });
+    mapSvg.appendChild(t);
+  });
   ROUTES.forEach(function(r){
     var a=PLACES[r[0]], b=PLACES[r[1]];
     var mx=(a.x+b.x)/2, my=(a.y+b.y)/2 - Math.abs(a.x-b.x)*0.18 - 20;
@@ -1270,7 +1413,7 @@ function addPulses(svg, paths, count, colors){
   pulseSets.push({svg:svg, items:items, visible:false});
 }
 addPulses(uniSvg, Array.prototype.slice.call(uniSvg.querySelectorAll("path.uni-root")), 8, ["#e8c987","#57c7b2"]);
-addPulses(mapSvg, Array.prototype.slice.call(mapSvg.querySelectorAll("path.map-route")), 5, ["#57c7b2","#e8c987"]);
+addPulses(mapSvg, Array.prototype.slice.call(mapSvg.querySelectorAll("path.map-route")), 5, ["#0e7a6d","#8a5a10"]);
 if("IntersectionObserver" in window){
   var vio = new IntersectionObserver(function(es){
     es.forEach(function(en){
