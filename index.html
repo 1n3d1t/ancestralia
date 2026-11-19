@@ -194,39 +194,12 @@
     margin-top:30px;border:1px solid var(--line-soft);border-radius:20px;overflow:hidden;background:var(--panel);
     display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);
   }
-  .song-art{position:relative;min-height:340px;background:#0a1512;overflow:hidden}
+  .song-art{position:relative;aspect-ratio:1/1;align-self:start;background:#0a1512;overflow:hidden}
   .song-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
   .song-art .veil{position:absolute;inset:0}
-  .song-art .art-bg{opacity:.6;filter:sepia(.3) saturate(1.08) contrast(1.02)}
   .song-art .art-frame{
     position:absolute;inset:12px;border:1.5px solid rgba(201,168,106,.7);
     outline:1px solid rgba(201,168,106,.32);outline-offset:5px;pointer-events:none;z-index:3;
-  }
-  .song-art .art-medallion{
-    position:absolute;top:50%;left:50%;transform:translate(-50%,-56%);
-    width:176px;height:176px;border-radius:50%;z-index:2;
-    display:flex;align-items:center;justify-content:center;
-    background:radial-gradient(circle at 50% 38%, rgba(233,214,164,.22), rgba(10,21,18,.88) 68%);
-    border:2px solid var(--sc,var(--gold));
-    box-shadow:0 0 0 6px rgba(10,21,18,.45), 0 0 34px var(--sc,var(--gold)), inset 0 0 26px rgba(0,0,0,.55);
-  }
-  .song-art .art-medallion::before{
-    content:"";position:absolute;inset:9px;border-radius:50%;
-    border:1px dashed rgba(232,201,135,.55);animation:spin 70s linear infinite;
-  }
-  .song-art .art-medallion::after{
-    content:"";position:absolute;left:50%;bottom:-7px;transform:translateX(-50%);
-    width:13px;height:13px;border-radius:50%;
-    background:radial-gradient(circle at 35% 30%, #aef3e4, #12a594 60%, #0b6e5f);
-    border:1.5px solid rgba(232,201,135,.85);box-shadow:0 0 12px rgba(87,199,178,.8);
-  }
-  .song-art .art-medallion .glyph{
-    font-family:"Cormorant Garamond",serif;font-style:italic;font-size:88px;line-height:1;
-    color:var(--gold-bright);text-shadow:0 2px 18px rgba(0,0,0,.65), 0 0 22px var(--sc,var(--gold));
-  }
-  .song-art .art-medallion .med-num{
-    position:absolute;top:16px;left:0;right:0;text-align:center;
-    font-size:10.5px;letter-spacing:.3em;color:rgba(236,226,203,.75);text-transform:uppercase;
   }
   .song-art .art-cap{
     position:absolute;left:20px;bottom:16px;right:20px;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:rgba(236,226,203,.85);
@@ -259,48 +232,41 @@
     padding:13px 16px;border-radius:10px;background:rgba(87,199,178,.06);
   }
   .listen-note b{color:var(--ink)}
-  @media (max-width:860px){ .song-view{grid-template-columns:1fr} .song-art{min-height:250px} .song-body{padding:28px 22px} }
+  .song-verses{
+    margin-top:24px;border:1px solid var(--line-soft);border-left:2px solid var(--gold);
+    background:rgba(201,168,106,.05);padding:20px 22px;border-radius:10px;
+  }
+  .song-verses .sv-label{font-size:11.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
+  .song-verses blockquote{
+    margin:12px 0 0;font-family:"Cormorant Garamond",serif;font-style:italic;
+    font-size:21px;line-height:1.55;color:var(--ink);
+  }
+  .song-verses blockquote p{margin:0 0 14px}
+  .song-verses blockquote p:last-child{margin-bottom:0}
+  @media (max-width:860px){ .song-view{grid-template-columns:1fr} .song-body{padding:28px 22px} }
 
   /* ---------- map : pergamino antiguo ---------- */
   .map-stage{
     margin-top:28px;border-radius:18px;overflow:hidden;position:relative;
+    aspect-ratio:2660/850;background:#141b16;
     border:3px solid #6d5326;
-    box-shadow:0 0 0 1px rgba(232,201,135,.35), inset 0 0 0 6px #2e2413, inset 0 0 90px rgba(101,67,20,.5), 0 24px 60px rgba(0,0,0,.45);
-    background:
-      radial-gradient(ellipse 90% 80% at 50% 38%, rgba(255,246,205,.55), transparent 62%),
-      radial-gradient(ellipse 60% 50% at 88% 92%, rgba(146,102,38,.38), transparent 65%),
-      radial-gradient(ellipse 50% 42% at 6% 6%, rgba(146,102,38,.32), transparent 60%),
-      radial-gradient(ellipse 34% 26% at 72% 22%, rgba(146,102,38,.20), transparent 70%),
-      linear-gradient(160deg,#ecd9a8 0%,#e0c78f 46%,#d2b677 100%);
+    box-shadow:0 0 0 1px rgba(232,201,135,.35), inset 0 0 0 6px rgba(46,36,19,.55), 0 24px 60px rgba(0,0,0,.45);
   }
+  .map-stage .map-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
   .map-stage::before{
-    content:"";position:absolute;inset:11px;border:1.5px solid rgba(109,83,38,.75);
-    outline:1px solid rgba(109,83,38,.4);outline-offset:4px;pointer-events:none;z-index:2;
+    content:"";position:absolute;inset:11px;border:1.5px solid rgba(109,83,38,.55);
+    outline:1px solid rgba(109,83,38,.3);outline-offset:4px;pointer-events:none;z-index:3;
   }
-  .map-stage::after{
-    content:"";position:absolute;inset:0;pointer-events:none;z-index:2;
-    background:
-      radial-gradient(circle 7px at 22px 22px, #7df0dc 0 2.5px, #0e9594 3.5px 6px, rgba(109,83,38,.9) 6.5px 7.5px, transparent 8.5px),
-      radial-gradient(circle 7px at calc(100% - 22px) 22px, #7df0dc 0 2.5px, #0e9594 3.5px 6px, rgba(109,83,38,.9) 6.5px 7.5px, transparent 8.5px),
-      radial-gradient(circle 7px at 22px calc(100% - 22px), #7df0dc 0 2.5px, #0e9594 3.5px 6px, rgba(109,83,38,.9) 6.5px 7.5px, transparent 8.5px),
-      radial-gradient(circle 7px at calc(100% - 22px) calc(100% - 22px), #7df0dc 0 2.5px, #0e9594 3.5px 6px, rgba(109,83,38,.9) 6.5px 7.5px, transparent 8.5px);
-  }
-  #mapSvg{display:block;width:100%;height:auto;position:relative;z-index:1}
-  .map-land{fill:rgba(150,106,44,.15);stroke:rgba(96,66,24,.55);stroke-width:1.6;stroke-linejoin:round}
-  .map-rhumb{stroke:rgba(96,66,24,.15);stroke-width:1}
-  .map-dna{fill:none;stroke:rgba(96,66,24,.20);stroke-width:2.4}
-  .map-dna-rung{stroke:rgba(96,66,24,.16);stroke-width:1.6}
-  .map-sea{font-family:"Manrope",sans-serif;letter-spacing:.42em;fill:rgba(96,66,24,.5);text-transform:uppercase}
-  .map-song{font-family:"Cormorant Garamond",serif;font-style:italic;fill:#5a3d16;cursor:pointer}
+  #mapSvg{display:block;width:100%;height:100%;position:absolute;inset:0;z-index:1}
+  .map-sea{font-family:"Manrope",sans-serif;letter-spacing:.42em;fill:rgba(74,50,16,.85);text-transform:uppercase;paint-order:stroke;stroke:rgba(246,236,205,.55);stroke-width:3px}
+  .map-song{font-family:"Cormorant Garamond",serif;font-style:italic;fill:#4a3010;cursor:pointer;paint-order:stroke;stroke:rgba(246,236,205,.75);stroke-width:3.5px}
   .map-song:hover,.map-song:focus{fill:#0b6e5f;text-decoration:underline}
-  .map-ship{stroke:rgba(90,61,22,.75);fill:rgba(150,106,44,.18);stroke-width:1.6;stroke-linejoin:round}
-  .map-rose{stroke:rgba(96,66,24,.7);fill:rgba(185,141,62,.5)}
-  .map-route{fill:none;stroke:rgba(11,110,95,.55);stroke-width:1.6;stroke-dasharray:5 6;animation:dashmove 26s linear infinite}
+  .map-route{fill:none;stroke:rgba(8,92,78,.8);stroke-width:2;stroke-dasharray:5 6;animation:dashmove 26s linear infinite}
   @keyframes dashmove{to{stroke-dashoffset:-440}}
   .map-place{cursor:pointer}
-  .map-place circle.ring{fill:rgba(255,248,220,.7);stroke:#7a5a1e;stroke-width:2}
+  .map-place circle.ring{fill:rgba(255,248,220,.78);stroke:#7a5a1e;stroke-width:2}
   .map-place circle.dot{fill:#0e9594}
-  .map-place text{fill:#3d2a0e;font-family:"Cormorant Garamond",serif;font-size:23px;font-weight:600;pointer-events:none}
+  .map-place text{fill:#3d2a0e;font-family:"Cormorant Garamond",serif;font-size:20px;font-weight:600;pointer-events:none;paint-order:stroke;stroke:rgba(246,236,205,.8);stroke-width:3.5px}
   .map-place:hover circle.ring,.map-place.active circle.ring{fill:rgba(125,240,220,.5);stroke:#0b6e5f}
   .map-panel{
     margin-top:16px;border:1px solid var(--line-soft);border-radius:var(--radius);background:var(--panel);
@@ -524,7 +490,6 @@
   .reduced-motion .hero-emblem{animation:none}
   .reduced-motion .map-route{animation:none}
   .reduced-motion .eq i{animation:none;height:10px}
-  .reduced-motion .song-art .art-medallion::before{animation:none}
   .reduced-motion .emblem-ring,.reduced-motion .emblem-glow,
   .reduced-motion .uni-root.minor,
   .reduced-motion .node.playing circle.core,.reduced-motion .node.active circle.core,
@@ -537,7 +502,6 @@
   @media (prefers-reduced-motion: reduce){
     html{scroll-behavior:auto}
     .hero-emblem,.map-route,.eq i,.emblem-ring,.emblem-glow,.uni-root.minor,
-    .song-art .art-medallion::before,
     .node.playing circle.core,.node.active circle.core,
     .hero h1,.hero .author,.hero .lede,.hero .hero-cta,.hero .hero-scroll{animation:none}
     .rv{opacity:1;transform:none;transition:none}
@@ -620,11 +584,12 @@
     <div class="sec-head">
       <span class="num">Cartografía viva</span>
       <h2>El mapa de las raíces y las migraciones</h2>
-      <p>No es un mapa turístico ni una lección de historia: es la geografía emocional del álbum, dibujada como el mapa antiguo que vive detrás del emblema de la portada —pergamino, rosa de los vientos y los doce títulos escritos sobre las costas—. Elige un territorio, o toca un título sobre el mapa, y descubre qué canciones nacen de él.</p>
+      <p>No es un mapa turístico ni una lección de historia: es la geografía emocional del álbum, trazada sobre una carta antigua —pergamino envejecido y grabado, con la península ibérica, Bretaña, Italia, el norte de África y el Atlántico abierto hacia Cuba—. Sobre esa carta se mueven las rutas y laten los territorios. Elige un territorio, o toca un título sobre el mapa, y descubre qué canciones nacen de él.</p>
       <div class="rule"></div>
     </div>
     <div class="map-stage">
-      <svg id="mapSvg" viewBox="0 0 1000 540" role="group" aria-label="Mapa artístico de conexiones entre Bretaña, Portugal, España, el norte de África, Italia y Cuba"></svg>
+      <img class="map-bg" src="assets/mapa-antiguo.jpg" alt="" />
+      <svg id="mapSvg" viewBox="0 0 1000 320" role="group" aria-label="Mapa artístico de conexiones entre Bretaña, Portugal, España, el norte de África, Italia y Cuba"></svg>
     </div>
     <div class="map-panel" id="mapPanel" aria-live="polite"></div>
   </div>
@@ -816,11 +781,12 @@ var SONGS = [
    color:"#6ec1d8", glyph:"S", root:174.61, scale:[0,2,4,5,9], tempo:3400, dur:217, wave:"sine",
    desc:["Lo que el mar escribe y borra: frases de agua y sal. Esta composición sigue la ruta atlántica hacia el Caribe, donde tantas historias peninsulares continuaron —transformadas— al otro lado del océano.",
          "La presencia de Cuba en el álbum es sutil, como una escala lejana que se intuye en el ritmo y en el acento de la melodía."],
+   verses:"Cada estela es un verso que no se repite,\nun pensamiento que al mar se deja caer,\nuna confidencia entre viento y oleaje\nque se borra antes de acabar de nacer.\n\nDiario líquido sin archivo posible,\ncaligrafía de espuma que no deja señal,\ncapítulos breves de una existencia,\nescritos en Frases de agua y sal.",
    conn:[2,8,1] },
- { yt:"7lkPZ1HfuD0", vsrc:"lista", title:"S'esvaeix", phase:"V · La transformación", phaseName:"Transformación", territory:"El Mediterráneo · lo que se desvanece",
-   color:"#b8a9d9", glyph:"E", root:233.08, scale:[0,2,3,7,10], tempo:3800, dur:196, wave:"sine",
-   desc:["En catalán, «s'esvaeix» significa «se desvanece». Penúltima estación del viaje: las lenguas, los oficios y los rostros que el tiempo disuelve poco a poco, como la niebla sobre el mar.",
-         "Pero desvanecerse no es desaparecer: es cambiar de estado. Lo que se desvanece en una generación reaparece, irreconocible y fiel, en la siguiente."],
+ { yt:"7lkPZ1HfuD0", vsrc:"lista", title:"S'esvaeix", phase:"V · La transformación", phaseName:"Transformación", territory:"El Mediterráneo · la puesta de sol y la memoria",
+   color:"#b8a9d9", glyph:"S", root:233.08, scale:[0,2,3,7,10], tempo:3800, dur:196, wave:"sine",
+   desc:["Un tema tranquilo y reflexivo, de atmósfera mediterránea. En catalán, «s'esvaeix» significa «se desvanece», y la pieza nace de las puestas de sol: ese instante en que la luz no desaparece de golpe, sino que se retira poco a poco, tiñendo el mar y el cielo antes de irse.",
+         "La puesta de sol es aquí la metáfora de la memoria que se desvanece: los rostros, las lenguas y los oficios no se pierden en un día, sino atardecer a atardecer. Y sin embargo, cada ocaso deja su color en quien lo mira: lo que se desvanece en una generación reaparece, transformado, en la siguiente."],
    conn:[4,5,11] },
  { yt:"a4rhU5Rl_5M", vsrc:"lista", title:"Nova Ancestralia", phase:"V · El renacimiento", phaseName:"Nova Ancestralia — el futuro", territory:"El horizonte · todos los territorios",
    color:"#e8c987", glyph:"✦", root:196.00, scale:[0,2,4,7,9,11], tempo:2700, dur:264, wave:"triangle",
@@ -830,17 +796,17 @@ var SONGS = [
 ];
 
 var PLACES = [
- { id:"bretana", name:"Bretaña", x:415, y:118, songs:[7,8,2],
+ { id:"bretana", name:"Bretaña", x:400, y:42, songs:[7,8,2],
    text:"Granito, niebla y una lengua celta que resiste. La Bretaña aporta al álbum la identidad que se defiende quedándose: apellidos que nombran, costas que miran al mismo Atlántico que Portugal." },
- { id:"portugal", name:"Portugal", x:296, y:308, songs:[8,2],
+ { id:"portugal", name:"Portugal", x:385, y:206, songs:[8,2],
    text:"La costa de Ericeira, el Forte de Milreu y la Praia de Mil Regos: desde estas playas de mil arenas partieron generaciones enteras hacia el Atlántico. Portugal es la orilla de la despedida." },
- { id:"espana", name:"España", x:428, y:282, songs:[1,6,4],
+ { id:"espana", name:"España", x:500, y:190, songs:[1,6,4],
    text:"El territorio de la mezcla: el patio andalusí de «Aljamía», las maletas de cartón de la emigración y el rincón mediterráneo de «Racó de món». Aquí se cruzan casi todas las rutas del álbum." },
- { id:"africa", name:"Norte de África", x:452, y:408, songs:[1],
+ { id:"africa", name:"Norte de África", x:630, y:298, songs:[1],
    text:"La otra orilla del estrecho, presente en la escritura aljamiada, en los ritmos y en los instrumentos que cruzaron el Mediterráneo en ambas direcciones durante siglos." },
- { id:"italia", name:"Italia", x:598, y:238, songs:[5],
+ { id:"italia", name:"Italia", x:885, y:198, songs:[5],
    text:"Nápoles y su lengua: «Ha da passa' 'a nuttata». Italia entra en el álbum como la noche que hay que atravesar con paciencia mediterránea hasta que amanezca." },
- { id:"cuba", name:"Cuba", x:96, y:330, songs:[9],
+ { id:"cuba", name:"Cuba", x:48, y:138, songs:[9],
    text:"La presencia más sutil del mapa: el destino lejano de la ruta atlántica, una escala que se intuye en «Frases de agua y sal» más que mostrarse. El viaje continúa al otro lado del océano." }
 ];
 var ROUTES = [[0,2],[2,1],[2,3],[2,4],[1,5],[0,1]]; /* indices into PLACES */
@@ -947,12 +913,15 @@ function openSong(i, scroll){
   var s = SONGS[i];
   nodeEls.forEach(function(n,k){ n.classList.toggle("active", k===i); });
   chipEls.forEach(function(c,k){ c.classList.toggle("active", k===i); });
-  var art = s.img
-    ? '<img src="'+s.img+'" alt="" /><div class="veil" style="background:linear-gradient(200deg, transparent 40%, rgba(6,13,12,.55))"></div><div class="art-frame" aria-hidden="true"></div><p class="art-cap">'+s.imgCap+'</p>'
-    : '<img class="art-bg" src="assets/portada.jpg" alt="" />'+
-      '<div class="veil" style="background:radial-gradient(ellipse 85% 75% at 30% 18%, '+s.color+'40, transparent 62%), radial-gradient(ellipse 75% 85% at 82% 92%, rgba(46,125,110,.38), transparent 62%), linear-gradient(200deg, rgba(6,13,12,.28), rgba(6,13,12,.72))"></div>'+
-      '<div class="art-medallion" style="--sc:'+s.color+'" aria-hidden="true"><span class="med-num">Nº '+(i+1)+' · 12</span><span class="glyph">'+s.glyph+'</span></div>'+
+  var art = '<img src="assets/cabecera-'+(i+1)+'.jpg" alt="Cabecera original de «'+s.title+'»: medallón de bronce y nudos celtas con su inicial grabada en el estilo de las letras de Ancestralia" />'+
+      '<div class="veil" style="background:linear-gradient(200deg, transparent 58%, rgba(6,13,12,.5))"></div>'+
       '<div class="art-frame" aria-hidden="true"></div><p class="art-cap">'+s.territory+'</p>';
+  var versesHtml = s.verses
+    ? '<div class="song-verses"><span class="sv-label">Los versos del autor</span><blockquote>'+
+      s.verses.split("\n\n").map(function(st){
+        return '<p>'+st.split("\n").join("<br>")+'</p>';
+      }).join("")+'</blockquote></div>'
+    : '';
   var conn = s.conn.map(function(j){
     return '<button type="button" class="conn-chip" data-conn="'+j+'"><i style="color:'+SONGS[j].color+';background:'+SONGS[j].color+'"></i>'+SONGS[j].title+'</button>';
   }).join("");
@@ -963,6 +932,7 @@ function openSong(i, scroll){
       '<h3>'+s.title+'</h3>'+
       '<span class="track-no">Composición '+(i+1)+' de 12</span>'+
       s.desc.map(function(p){ return '<p class="desc">'+p+'</p>'; }).join("")+
+      versesHtml+
       '<div class="meta-row">'+
         '<span class="meta-pill">Territorio · <b>'+s.territory+'</b></span>'+
         '<span class="meta-pill">Movimiento · <b>'+s.phaseName+'</b></span>'+
@@ -1029,99 +999,48 @@ var mapSvg = document.getElementById("mapSvg");
 var mapPanel = document.getElementById("mapPanel");
 var placeEls = [];
 (function buildMap(){
-  /* ===== pergamino: tierras, rumbos, hélice, rosa, barcos y títulos ===== */
-  var lands = [
-    "M300 152 Q288 92 350 56 Q428 28 502 58 Q548 84 522 132 Q500 168 452 162 Q420 188 378 172 Q328 178 300 152 Z",
-    "M250 252 Q260 206 332 196 Q422 186 480 216 Q506 252 480 300 Q470 346 400 352 Q320 358 274 322 Q244 296 250 252 Z",
-    "M560 172 Q602 150 642 176 Q622 212 642 252 Q668 302 640 332 Q614 322 604 276 Q590 232 560 206 Q544 188 560 172 Z",
-    "M320 432 Q340 392 432 386 Q542 380 612 406 Q642 442 600 472 Q500 498 390 482 Q328 472 320 432 Z",
-    "M35 322 Q92 296 166 310 Q188 322 162 342 Q96 358 44 342 Q24 334 35 322 Z"
-  ];
-  lands.forEach(function(d){ mapSvg.appendChild(el("path",{d:d, "class":"map-land"})); });
-  /* rhumb lines fanning from the compass rose */
-  [[872,108,120,470],[872,108,300,60],[872,108,60,180],[872,108,430,505],[872,108,985,300],[872,108,180,90]].forEach(function(l){
-    mapSvg.appendChild(el("line",{x1:l[0], y1:l[1], x2:l[2], y2:l[3], "class":"map-rhumb"}));
-  });
-  /* DNA helix watermark, like the author's test background */
-  var dna = el("g",{transform:"translate(505,282)"});
-  dna.appendChild(el("path",{d:"M0 -128 C 46 -96, -46 -64, 0 -32 C 46 0, -46 32, 0 64 C 46 96, -46 112, 0 128", "class":"map-dna"}));
-  dna.appendChild(el("path",{d:"M0 -128 C -46 -96, 46 -64, 0 -32 C -46 0, 46 32, 0 64 C -46 96, 46 112, 0 128", "class":"map-dna"}));
-  [-112,-80,-48,-16,16,48,80,112].forEach(function(y){
-    dna.appendChild(el("line",{x1:-17, y1:y, x2:17, y2:y, "class":"map-dna-rung"}));
-  });
-  mapSvg.appendChild(dna);
+  /* ===== Sobre la carta antigua en imagen: mares, títulos, rutas y lugares (código animado) ===== */
   /* sea names */
-  var sea1 = el("text",{x:128, y:238, "class":"map-sea", "font-size":"12.5", transform:"rotate(-90 128 238)", "text-anchor":"middle"});
+  var sea1 = el("text",{x:72, y:190, "class":"map-sea", "font-size":"11", transform:"rotate(-90 72 190)", "text-anchor":"middle"});
   sea1.textContent = "Océano Atlántico"; mapSvg.appendChild(sea1);
-  var sea2 = el("text",{x:700, y:392, "class":"map-sea", "font-size":"12.5", "text-anchor":"middle"});
+  var sea2 = el("text",{x:742, y:284, "class":"map-sea", "font-size":"11", "text-anchor":"middle"});
   sea2.textContent = "Mar Mediterráneo"; mapSvg.appendChild(sea2);
-  /* period ships */
-  function ship(x,y,s){
-    var g = el("g",{transform:"translate("+x+","+y+") scale("+s+")", "class":"map-ship"});
-    g.appendChild(el("path",{d:"M-26 10 L26 10 L18 22 L-16 22 Z"}));
-    g.appendChild(el("line",{x1:-4, y1:10, x2:-4, y2:-24}));
-    g.appendChild(el("line",{x1:12, y1:10, x2:12, y2:-16}));
-    g.appendChild(el("path",{d:"M-4 -24 L-4 -4 L-18 -4 Z"}));
-    g.appendChild(el("path",{d:"M-4 -24 L10 -4 L-4 -4 Z"}));
-    g.appendChild(el("path",{d:"M12 -16 L12 -4 L2 -4 Z"}));
-    return g;
-  }
-  mapSvg.appendChild(ship(196,428,1));
-  mapSvg.appendChild(ship(758,448,0.8));
-  /* compass rose */
-  var rose = el("g",{transform:"translate(872,108)"});
-  rose.appendChild(el("circle",{r:52, fill:"none", "class":"map-rose", "stroke-width":1.4}));
-  rose.appendChild(el("circle",{r:42, fill:"none", "class":"map-rose", "stroke-width":.8}));
-  [[0,-46],[46,0],[0,46],[-46,0],[33,-33],[33,33],[-33,33],[-33,-33]].forEach(function(p,i){
-    var diag = i>=4, len = diag?0.55:1, w = diag?5:7;
-    var px = p[0]*len, py = p[1]*len;
-    var ang = Math.atan2(py,px), a1 = ang+Math.PI/2, a2 = ang-Math.PI/2;
-    var pts = "0,0 "+(Math.cos(a1)*w)+","+(Math.sin(a1)*w)+" "+px+","+py+" "+(Math.cos(a2)*w)+","+(Math.sin(a2)*w);
-    rose.appendChild(el("polygon",{points:pts, fill: diag?"rgba(185,141,62,.35)":"rgba(122,90,30,.75)", stroke:"rgba(96,66,24,.6)", "stroke-width":.8}));
-  });
-  var gem = el("circle",{r:6.5, fill:"#12a594", stroke:"rgba(96,66,24,.8)", "stroke-width":1.2});
-  rose.appendChild(gem);
-  [["N",0,-62],["E",64,5],["S",0,72],["O",-64,5]].forEach(function(L){
-    var t = el("text",{x:L[1], y:L[2], "text-anchor":"middle", fill:"#5a3d16", "font-family":"Cormorant Garamond, serif", "font-size":"17", "font-weight":"600"});
-    t.textContent = L[0]; rose.appendChild(t);
-  });
-  mapSvg.appendChild(rose);
   /* the twelve titles written over the geography (correct spellings) */
   var TITLES = [
-    {t:"Ancestralia", s:0, x:498, y:38, size:29, anchor:"middle"},
-    {t:"Nova Ancestralia", s:11, x:726, y:52, size:22, anchor:"middle"},
-    {t:"Anaoudek", s:7, x:316, y:98, size:22, anchor:"middle"},
-    {t:"Mareas cruzadas", s:2, x:140, y:200, size:21, anchor:"middle"},
-    {t:"Praias de mil areias", s:8, x:150, y:258, size:20, anchor:"middle", t2:"/ Iroise"},
-    {t:"La línea de la vida", s:3, x:618, y:138, size:21, anchor:"middle"},
-    {t:"Maletas de cartón", s:6, x:474, y:224, size:20, anchor:"middle"},
-    {t:"Racó de món", s:4, x:566, y:284, size:20, anchor:"start"},
-    {t:"Ha da passa' 'a nuttata", s:5, x:724, y:206, size:20, anchor:"middle"},
-    {t:"Aljamía", s:1, x:548, y:366, size:22, anchor:"middle"},
-    {t:"S'esvaeix", s:10, x:676, y:352, size:20, anchor:"middle"},
-    {t:"Frases de agua y sal", s:9, x:222, y:474, size:21, anchor:"middle"}
+    {t:"Ancestralia", s:0, x:560, y:30, size:23, anchor:"middle"},
+    {t:"Nova Ancestralia", s:11, x:786, y:30, size:19, anchor:"middle"},
+    {t:"Anaoudek", s:7, x:298, y:60, size:18, anchor:"middle"},
+    {t:"Mareas cruzadas", s:2, x:140, y:100, size:18, anchor:"middle"},
+    {t:"Praias de mil areias", s:8, x:140, y:158, size:17, anchor:"middle", t2:"/ Iroise"},
+    {t:"La línea de la vida", s:3, x:700, y:74, size:18, anchor:"middle"},
+    {t:"Maletas de cartón", s:6, x:492, y:124, size:17, anchor:"middle"},
+    {t:"Racó de món", s:4, x:640, y:208, size:17, anchor:"middle"},
+    {t:"Ha da passa' 'a nuttata", s:5, x:822, y:110, size:17, anchor:"middle"},
+    {t:"Aljamía", s:1, x:520, y:274, size:19, anchor:"middle"},
+    {t:"S'esvaeix", s:10, x:712, y:242, size:17, anchor:"middle"},
+    {t:"Frases de agua y sal", s:9, x:188, y:290, size:18, anchor:"middle"}
   ];
   TITLES.forEach(function(L){
     var t = el("text",{x:L.x, y:L.y, "text-anchor":L.anchor, "class":"map-song", "font-size":L.size, tabindex:"0", role:"button",
       "aria-label":"Abrir la ficha de "+SONGS[L.s].title});
     t.textContent = L.t;
-    if(L.t2){ var ts = el("tspan",{x:L.x, dy:19, "font-size":L.size-3.5}); ts.textContent = L.t2; t.appendChild(ts); }
+    if(L.t2){ var ts = el("tspan",{x:L.x, dy:16, "font-size":L.size-3}); ts.textContent = L.t2; t.appendChild(ts); }
     t.addEventListener("click", function(){ openSong(L.s, true); });
     t.addEventListener("keydown", function(ev){ if(ev.key==="Enter"||ev.key===" "){ ev.preventDefault(); openSong(L.s,true); } });
     mapSvg.appendChild(t);
   });
   ROUTES.forEach(function(r){
     var a=PLACES[r[0]], b=PLACES[r[1]];
-    var mx=(a.x+b.x)/2, my=(a.y+b.y)/2 - Math.abs(a.x-b.x)*0.18 - 20;
+    var mx=(a.x+b.x)/2, my=(a.y+b.y)/2 - Math.abs(a.x-b.x)*0.18 - 14;
     mapSvg.appendChild(el("path",{d:"M"+a.x+" "+a.y+" Q"+mx+" "+my+" "+b.x+" "+b.y, "class":"map-route"}));
   });
   PLACES.forEach(function(p,idx){
     var g = el("g",{"class":"map-place", tabindex:"0", role:"button", "aria-label":"Ver el territorio "+p.name});
-    g.appendChild(el("circle",{cx:p.x, cy:p.y, r:17, "class":"ring"}));
-    g.appendChild(el("circle",{cx:p.x, cy:p.y, r:5, "class":"dot"}));
-    var t = el("text",{x:p.x, y:p.y-28, "text-anchor":"middle"});
+    g.appendChild(el("circle",{cx:p.x, cy:p.y, r:13, "class":"ring"}));
+    g.appendChild(el("circle",{cx:p.x, cy:p.y, r:4, "class":"dot"}));
+    var t = el("text",{x:p.x, y:p.y-20, "text-anchor":"middle"});
     t.textContent = p.name; g.appendChild(t);
-    g.appendChild(el("circle",{cx:p.x, cy:p.y, r:32, fill:"transparent"}));
+    g.appendChild(el("circle",{cx:p.x, cy:p.y, r:26, fill:"transparent"}));
     g.addEventListener("click", function(){ openPlace(idx); });
     g.addEventListener("keydown", function(ev){ if(ev.key==="Enter"||ev.key===" "){ ev.preventDefault(); openPlace(idx); } });
     mapSvg.appendChild(g); placeEls.push(g);
