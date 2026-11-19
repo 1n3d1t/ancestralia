@@ -1,0 +1,1345 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="dark" />
+<meta name="referrer" content="strict-origin-when-cross-origin" />
+<meta name="description" content="Ancestralia, de Javier Rubio: una instalación web interactiva para recorrer, escuchar y descubrir un álbum de doce composiciones sobre raíces, migraciones y encuentros." />
+<link rel="icon" href="data:," />
+<title>Ancestralia — Javier Rubio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    color-scheme: dark;
+    --bg:#060d0c;
+    --bg2:#0a1512;
+    --panel:#0d1a16;
+    --panel2:#101f1a;
+    --ink:#ece2cb;
+    --ink-dim:#b9ac8f;
+    --ink-faint:#8a7f68;
+    --gold:#c9a86a;
+    --gold-bright:#e8c987;
+    --teal:#57c7b2;
+    --teal-dim:#2e7d6e;
+    --line:rgba(201,168,106,.28);
+    --line-soft:rgba(201,168,106,.14);
+    --accent:#57c7b2;
+    --radius:14px;
+    --player-h:86px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
+    font-size:16.5px;line-height:1.65;
+    padding-bottom:calc(var(--player-h) + 18px);
+    overflow-x:hidden;
+  }
+  ::selection{background:rgba(87,199,178,.35)}
+  img{max-width:100%;display:block}
+  button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;min-height:44px}
+  a{color:var(--teal)}
+  h1,h2,h3,.serif{font-family:"Cormorant Garamond",Georgia,serif;font-weight:500;line-height:1.12;margin:0}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    position:fixed;inset:0 0 auto 0;z-index:60;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:10px 20px;
+    background:linear-gradient(180deg,rgba(6,13,12,.92),rgba(6,13,12,.55) 70%,transparent);
+    backdrop-filter:blur(6px);
+  }
+  .brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--ink)}
+  .brand img{width:44px;height:44px;object-fit:contain;background:transparent;border-radius:0;filter:drop-shadow(0 2px 8px rgba(201,168,106,.35))}
+  .brand span{font-family:"Cormorant Garamond",serif;font-size:21px;letter-spacing:.24em;text-transform:uppercase}
+  .brand small{display:block;font-family:"Manrope",sans-serif;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-faint)}
+  nav.main{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+  nav.main a{
+    color:var(--ink-dim);text-decoration:none;font-size:13px;letter-spacing:.12em;text-transform:uppercase;
+    padding:10px 12px;border-radius:99px;min-height:44px;display:inline-flex;align-items:center;
+  }
+  nav.main a:hover{color:var(--gold-bright);background:rgba(201,168,106,.08)}
+  .motion-btn{
+    border:1px solid var(--line);border-radius:99px;padding:8px 14px;font-size:12.5px;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--ink-dim);white-space:nowrap;
+  }
+  .motion-btn:hover{color:var(--gold-bright);border-color:var(--gold)}
+  @media (max-width:760px){
+    nav.main{display:none} .brand small{display:none}
+    .topbar{padding:8px 12px}
+    .brand img{width:36px;height:36px}
+    .brand span{font-size:16.5px;letter-spacing:.14em}
+    .motion-btn{font-size:10.5px;padding:7px 10px;letter-spacing:.06em}
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:110px 22px 70px;overflow:hidden;
+    background:
+      radial-gradient(ellipse 90% 55% at 50% 108%, rgba(46,125,110,.28), transparent 60%),
+      radial-gradient(ellipse 60% 40% at 50% -5%, rgba(201,168,106,.14), transparent 60%),
+      var(--bg);
+  }
+  #stars{position:absolute;inset:0;width:100%;height:100%;opacity:.85;pointer-events:none}
+  .emblem-wrap{
+    position:relative;width:min(470px,84vw);aspect-ratio:1;flex:none;
+    display:flex;align-items:center;justify-content:center;
+    transition:transform .45s cubic-bezier(.2,.7,.2,1);
+  }
+  .emblem-glow{
+    position:absolute;inset:9%;z-index:0;border-radius:50%;
+    background:radial-gradient(circle, rgba(232,201,135,.34) 0%, rgba(201,168,106,.16) 42%, rgba(87,199,178,.08) 62%, transparent 72%);
+    animation:glowPulse 7s ease-in-out infinite;
+  }
+  @keyframes glowPulse{0%,100%{opacity:.75;transform:scale(1)}50%{opacity:1;transform:scale(1.06)}}
+  .emblem-ring{position:absolute;border-radius:50%;pointer-events:none;z-index:1}
+  .emblem-ring.r1{inset:0;border:1px dashed rgba(201,168,106,.34);animation:spin 80s linear infinite}
+  .emblem-ring.r2{inset:5.5%;border:1px solid rgba(87,199,178,.14);border-top-color:rgba(87,199,178,.55);animation:spinRev 55s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes spinRev{to{transform:rotate(-360deg)}}
+  .hero-emblem{
+    position:relative;z-index:2;width:93%;height:auto;
+    mix-blend-mode:lighten;
+    animation:emblemFloat 9s ease-in-out infinite;
+  }
+  @keyframes emblemFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+  @keyframes heroIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+  .hero h1{animation:heroIn 1.1s .1s cubic-bezier(.2,.7,.2,1) both}
+  .hero .author{animation:heroIn 1.1s .28s cubic-bezier(.2,.7,.2,1) both}
+  .hero .lede{animation:heroIn 1.1s .46s cubic-bezier(.2,.7,.2,1) both}
+  .hero .hero-cta{animation:heroIn 1.1s .64s cubic-bezier(.2,.7,.2,1) both}
+  .hero .hero-scroll{animation:heroIn 1.1s .85s cubic-bezier(.2,.7,.2,1) both}
+  .hero h1{
+    margin-top:34px;font-size:clamp(44px,8.5vw,96px);letter-spacing:.14em;text-transform:uppercase;font-weight:500;
+    color:var(--ink);
+  }
+  .hero h1 .gold{color:var(--gold-bright)}
+  .hero .author{margin-top:6px;font-size:14px;letter-spacing:.34em;text-transform:uppercase;color:var(--ink-dim)}
+  .hero .lede{max-width:620px;margin:26px auto 0;font-size:18px;color:var(--ink-dim);font-weight:300}
+  .hero .lede em{color:var(--ink);font-family:"Cormorant Garamond",serif;font-size:21px}
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:36px;position:relative;z-index:2}
+  .btn{
+    display:inline-flex;align-items:center;gap:10px;padding:13px 26px;border-radius:99px;
+    font-size:14px;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;min-height:48px;
+    transition:transform .25s ease, background .25s ease, border-color .25s ease;
+  }
+  .btn-solid{background:var(--gold);color:#181106;font-weight:700}
+  .btn-solid:hover{background:var(--gold-bright);transform:translateY(-2px)}
+  .btn-ghost{border:1px solid var(--line);color:var(--ink)}
+  .btn-ghost:hover{border-color:var(--teal);color:var(--teal);transform:translateY(-2px)}
+  .hero-scroll{margin-top:52px;color:var(--ink-faint);font-size:12px;letter-spacing:.3em;text-transform:uppercase}
+  .hero-scroll::after{content:"";display:block;width:1px;height:44px;margin:10px auto 0;background:linear-gradient(180deg,var(--gold),transparent)}
+
+  /* ---------- sections ---------- */
+  section{padding:96px 0 30px;position:relative}
+  .sec-head{max-width:720px;margin-bottom:14px}
+  .sec-head .num{font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--gold);font-size:19px}
+  .sec-head h2{font-size:clamp(32px,4.6vw,52px);margin:6px 0 12px}
+  .sec-head p{color:var(--ink-dim);font-weight:300;font-size:17.5px;margin:0}
+  .rule{width:74px;height:1px;background:linear-gradient(90deg,var(--gold),transparent);margin:22px 0 0}
+
+  /* ---------- universe ---------- */
+  #universo{background:linear-gradient(180deg,var(--bg) 0%,var(--bg2) 55%,var(--bg) 100%)}
+  .universe-stage{
+    position:relative;margin-top:26px;border:1px solid var(--line-soft);border-radius:20px;overflow:hidden;
+    background:
+      radial-gradient(ellipse 70% 60% at 50% 50%, rgba(46,125,110,.16), transparent 65%),
+      radial-gradient(ellipse 40% 32% at 50% 50%, rgba(201,168,106,.12), transparent 70%),
+      #081210;
+  }
+  #uniCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+  #uniSvg{position:relative;display:block;width:100%;height:auto}
+  .uni-root{fill:none;stroke:rgba(201,168,106,.34);stroke-width:1.4;stroke-linecap:round}
+  .uni-root.minor{stroke:rgba(87,199,178,.16);stroke-width:1}
+  .uni-ring{fill:none;stroke:rgba(201,168,106,.10);stroke-dasharray:2 7}
+  .uni-root.minor{stroke-dasharray:2 5;animation:flowDash 3.4s linear infinite}
+  @keyframes flowDash{to{stroke-dashoffset:-70}}
+  .node circle.core{transform-box:fill-box;transform-origin:center}
+  .node.playing circle.core{animation:nodePulse 2.1s ease-in-out infinite}
+  .node.active circle.core{animation:nodePulse 3.4s ease-in-out infinite}
+  @keyframes nodePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.22)}}
+  .pulse-dot{pointer-events:none}
+  .node{cursor:pointer}
+  .node .halo{fill:transparent;transition:fill .3s}
+  .node circle.core{stroke-width:1.6;transition:transform .3s ease}
+  .node text{pointer-events:none}
+  .node .nlabel{font-family:"Cormorant Garamond",serif;font-size:19px;fill:var(--ink)}
+  .node .nnum{font-family:"Manrope",sans-serif;font-size:11px;letter-spacing:.14em;fill:var(--ink-faint)}
+  .node:hover .halo,.node:focus .halo{fill:rgba(232,201,135,.10)}
+  .node.active circle.core{stroke:var(--gold-bright)}
+  .node.playing circle.core{stroke:var(--teal)}
+  .uni-hint{text-align:center;color:var(--ink-faint);font-size:13.5px;margin-top:14px;letter-spacing:.06em}
+  .song-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:30px}
+  .song-chip{
+    text-align:left;border:1px solid var(--line-soft);border-radius:var(--radius);padding:16px 18px;
+    background:var(--panel);display:flex;gap:14px;align-items:flex-start;width:100%;
+    transition:border-color .25s, transform .25s, background .25s;
+  }
+  .song-chip:hover{border-color:var(--gold);transform:translateY(-2px);background:var(--panel2)}
+  .song-chip .dot{width:13px;height:13px;border-radius:50%;margin-top:6px;flex:none;box-shadow:0 0 12px currentColor}
+  .song-chip b{font-family:"Cormorant Garamond",serif;font-weight:600;font-size:20px;display:block;line-height:1.2}
+  .song-chip span{font-size:12.5px;color:var(--ink-faint);letter-spacing:.1em;text-transform:uppercase}
+  .song-chip.active{border-color:var(--gold-bright);background:var(--panel2)}
+
+  /* ---------- song detail ---------- */
+  #cancion{scroll-margin-top:70px}
+  .song-view{
+    margin-top:30px;border:1px solid var(--line-soft);border-radius:20px;overflow:hidden;background:var(--panel);
+    display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);
+  }
+  .song-art{position:relative;min-height:340px;background:#0a1512;overflow:hidden}
+  .song-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .song-art .veil{position:absolute;inset:0}
+  .song-art .big-glyph{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-family:"Cormorant Garamond",serif;font-size:190px;color:rgba(236,226,203,.16);font-style:italic;
+  }
+  .song-art .art-cap{
+    position:absolute;left:20px;bottom:16px;right:20px;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:rgba(236,226,203,.85);
+    text-shadow:0 1px 8px rgba(0,0,0,.7);
+  }
+  .song-body{padding:38px 40px 34px}
+  .song-body .phase{font-size:12.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--gold)}
+  .song-body h3{font-size:clamp(32px,4vw,48px);margin:8px 0 4px}
+  .song-body .track-no{color:var(--ink-faint);font-family:"Cormorant Garamond",serif;font-style:italic;font-size:19px}
+  .song-body .desc{color:var(--ink-dim);font-weight:300;font-size:17.5px;margin:16px 0 0}
+  .song-body .desc + .desc{margin-top:12px}
+  .meta-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+  .meta-pill{border:1px solid var(--line);border-radius:99px;padding:7px 14px;font-size:13px;color:var(--ink-dim)}
+  .meta-pill b{color:var(--ink);font-weight:600}
+  .conn-row{margin-top:26px}
+  .conn-row h4{margin:0 0 10px;font-size:12.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-faint);font-weight:600}
+  .conn-chips{display:flex;flex-wrap:wrap;gap:8px}
+  .conn-chip{
+    border:1px solid var(--line-soft);border-radius:99px;padding:9px 16px;font-size:14px;color:var(--ink);
+    display:inline-flex;align-items:center;gap:8px;background:rgba(201,168,106,.05);
+  }
+  .conn-chip:hover{border-color:var(--teal);color:var(--teal)}
+  .conn-chip i{width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block}
+  .song-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px;align-items:center}
+  .btn-play-song{background:var(--teal);color:#06231d;font-weight:700}
+  .btn-play-song:hover{background:#79d8c6}
+  .listen-note{
+    font-size:14.5px;color:var(--ink-dim);max-width:560px;line-height:1.55;
+    border:1px solid var(--line-soft);border-left:2px solid var(--teal);
+    padding:13px 16px;border-radius:10px;background:rgba(87,199,178,.06);
+  }
+  .listen-note b{color:var(--ink)}
+  @media (max-width:860px){ .song-view{grid-template-columns:1fr} .song-art{min-height:250px} .song-body{padding:28px 22px} }
+
+  /* ---------- map ---------- */
+  .map-stage{
+    margin-top:28px;border:1px solid var(--line-soft);border-radius:20px;overflow:hidden;position:relative;
+    background:
+      radial-gradient(ellipse 80% 70% at 30% 20%, rgba(38,84,110,.20), transparent 60%),
+      radial-gradient(ellipse 60% 60% at 75% 80%, rgba(46,125,110,.14), transparent 60%),
+      #081118;
+  }
+  #mapSvg{display:block;width:100%;height:auto}
+  .map-route{fill:none;stroke:rgba(87,199,178,.4);stroke-width:1.6;stroke-dasharray:5 6;animation:dashmove 26s linear infinite}
+  @keyframes dashmove{to{stroke-dashoffset:-440}}
+  .map-place{cursor:pointer}
+  .map-place circle.ring{fill:rgba(201,168,106,.10);stroke:var(--gold);stroke-width:1.2}
+  .map-place circle.dot{fill:var(--gold-bright)}
+  .map-place text{fill:var(--ink);font-family:"Cormorant Garamond",serif;font-size:23px;pointer-events:none}
+  .map-place:hover circle.ring,.map-place.active circle.ring{fill:rgba(87,199,178,.18);stroke:var(--teal)}
+  .map-panel{
+    margin-top:16px;border:1px solid var(--line-soft);border-radius:var(--radius);background:var(--panel);
+    padding:24px 26px;display:none;scroll-margin-top:84px;scroll-margin-bottom:230px;
+  }
+  .map-panel.open{display:block}
+  .map-panel h3{font-size:28px;margin-bottom:6px}
+  .map-panel p{color:var(--ink-dim);font-weight:300;margin:0 0 16px;max-width:640px}
+
+  /* ---------- historia / circular ---------- */
+  .circle-phases{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:34px}
+  .phase-card{border:1px solid var(--line-soft);border-radius:var(--radius);padding:24px 22px;background:var(--panel)}
+  .phase-card .ph-num{font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--gold);font-size:17px}
+  .phase-card h3{font-size:24px;margin:6px 0 8px;letter-spacing:.04em}
+  .phase-card p{color:var(--ink-dim);font-weight:300;font-size:15.5px;margin:0}
+  .phase-card.final{border-color:var(--gold);background:linear-gradient(160deg,rgba(201,168,106,.12),var(--panel) 60%)}
+  .prose{max-width:760px}
+  .prose p{color:var(--ink-dim);font-weight:300;font-size:18px;margin:0 0 18px}
+  .prose p strong{color:var(--ink);font-weight:600}
+  .prose .drop::first-letter{
+    font-family:"Cormorant Garamond",serif;font-size:56px;line-height:.85;float:left;margin:6px 12px 0 0;color:var(--gold-bright);
+  }
+  blockquote.motto{
+    margin:44px 0 0;padding:6px 0 6px 28px;border-left:2px solid var(--gold);
+    font-family:"Cormorant Garamond",serif;font-style:italic;font-size:clamp(23px,3.4vw,32px);line-height:1.35;color:var(--ink);max-width:760px;
+  }
+
+  /* ---------- proceso ---------- */
+  .studio-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px;margin-top:32px}
+  .studio-grid figure{margin:0;border-radius:var(--radius);overflow:hidden;position:relative;border:1px solid var(--line-soft)}
+  .studio-grid img{width:100%;height:100%;object-fit:cover;aspect-ratio:16/10;transition:transform .6s ease}
+  .studio-grid figure:hover img{transform:scale(1.04)}
+  .studio-grid figcaption{
+    position:absolute;left:0;right:0;bottom:0;padding:26px 16px 12px;font-size:12.5px;color:rgba(236,226,203,.92);
+    background:linear-gradient(180deg,transparent,rgba(4,8,7,.82));letter-spacing:.05em;
+  }
+  .sg-a{grid-column:span 7}.sg-b{grid-column:span 5}.sg-c{grid-column:span 5}.sg-d{grid-column:span 7}
+  @media (max-width:760px){ .sg-a,.sg-b,.sg-c,.sg-d{grid-column:span 12} }
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:36px}
+  .step{border-top:1px solid var(--line);padding-top:16px}
+  .step b{font-family:"Cormorant Garamond",serif;font-size:21px;font-weight:600;display:block;margin-bottom:6px}
+  .step p{color:var(--ink-dim);font-weight:300;font-size:15.5px;margin:0}
+
+  /* ---------- nova ---------- */
+  #nova{
+    margin-top:70px;padding:110px 0 90px;text-align:center;overflow:hidden;
+    background:
+      radial-gradient(ellipse 75% 60% at 50% 115%, rgba(201,168,106,.20), transparent 62%),
+      radial-gradient(ellipse 55% 45% at 50% -10%, rgba(87,199,178,.12), transparent 60%),
+      var(--bg2);
+    border-top:1px solid var(--line-soft);
+  }
+  #nova img.cover{width:min(340px,70vw);border-radius:50%;margin:0 auto;box-shadow:0 0 80px rgba(201,168,106,.25)}
+  #nova h2{font-size:clamp(36px,5.5vw,60px);margin:34px 0 10px;letter-spacing:.06em}
+  #nova p{max-width:640px;margin:0 auto;color:var(--ink-dim);font-weight:300;font-size:18px}
+  #nova .final-line{
+    font-family:"Cormorant Garamond",serif;font-style:italic;font-size:clamp(22px,3.4vw,30px);color:var(--gold-bright);
+    max-width:700px;margin:34px auto 0;line-height:1.4;
+  }
+  footer{padding:44px 0 20px;text-align:center;color:var(--ink-faint);font-size:13.5px}
+  footer .fbrand{font-family:"Cormorant Garamond",serif;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-dim);font-size:16px}
+
+  /* ---------- player ---------- */
+  .player{
+    position:fixed;left:0;right:0;bottom:0;z-index:70;height:var(--player-h);
+    background:rgba(8,17,14,.94);backdrop-filter:blur(12px);
+    border-top:1px solid var(--line);
+    display:flex;align-items:center;gap:14px;padding:10px 18px;
+  }
+  .player .cover{width:56px;height:56px;border-radius:10px;object-fit:cover;border:1px solid var(--line);flex:none;cursor:pointer}
+  .player .now{min-width:0;flex:0 1 230px}
+  .player .now b{display:block;font-family:"Cormorant Garamond",serif;font-size:20px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.15}
+  .player .now span{font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint)}
+  .p-controls{display:flex;align-items:center;gap:4px;flex:none}
+  .p-btn{
+    width:44px;height:44px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:var(--ink);
+  }
+  .p-btn:hover{background:rgba(201,168,106,.12);color:var(--gold-bright)}
+  .p-btn.main{width:52px;height:52px;background:var(--gold);color:#181106}
+  .p-btn.main:hover{background:var(--gold-bright);color:#181106}
+  .p-btn svg{width:22px;height:22px;fill:currentColor}
+  .p-btn.main svg{width:24px;height:24px}
+  .p-progress{flex:1;display:flex;align-items:center;gap:10px;min-width:90px}
+  .p-progress time{font-size:12px;color:var(--ink-faint);font-variant-numeric:tabular-nums;min-width:36px;text-align:center}
+  .bar{
+    flex:1;height:26px;display:flex;align-items:center;cursor:pointer;position:relative;
+  }
+  .bar .track{height:4px;width:100%;background:rgba(236,226,203,.16);border-radius:99px;position:relative}
+  .bar .fill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--teal),var(--gold));border-radius:99px;width:0%}
+  .bar .fill::after{content:"";position:absolute;right:-5px;top:50%;transform:translateY(-50%);width:11px;height:11px;border-radius:50%;background:var(--gold-bright);box-shadow:0 0 10px rgba(232,201,135,.8)}
+  .p-vol{display:flex;align-items:center;gap:8px;flex:none}
+  .p-vol svg{width:19px;height:19px;fill:var(--ink-dim)}
+  input[type="range"].vol{
+    -webkit-appearance:none;appearance:none;width:84px;height:4px;border-radius:99px;background:rgba(236,226,203,.2);outline:none;min-height:26px;
+  }
+  input[type="range"].vol::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--gold-bright);cursor:pointer}
+  input[type="range"].vol::-moz-range-thumb{width:14px;height:14px;border:none;border-radius:50%;background:var(--gold-bright);cursor:pointer}
+  .eq{display:none;align-items:flex-end;gap:2.5px;height:18px;flex:none}
+  .eq.on{display:flex}
+  .eq i{width:3px;background:var(--teal);border-radius:2px;animation:eqb 0.9s ease-in-out infinite}
+  .eq i:nth-child(2){animation-delay:.18s}.eq i:nth-child(3){animation-delay:.36s}.eq i:nth-child(4){animation-delay:.1s}
+  @keyframes eqb{0%,100%{height:5px}50%{height:17px}}
+  .player .now span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  @media (max-width:820px){
+    .player{flex-wrap:wrap;height:auto;row-gap:4px;padding:10px 12px 12px}
+    body{padding-bottom:178px}
+    .player .now{flex:1}
+    .player .now span{font-size:10.5px;letter-spacing:.1em}
+    .p-progress{display:flex;order:5;flex:1 1 180px}
+    .p-vol{display:flex;order:6}
+    input[type="range"].vol{width:58px}
+    .player .cover{width:48px;height:48px}
+  }
+  @media (max-width:480px){ .player{gap:8px;padding:10px 12px} .player .now b{font-size:17px} .player .now span{letter-spacing:.03em} }
+
+  /* ---------- video dock + facade ---------- */
+  .vdock{
+    position:fixed;right:16px;bottom:calc(var(--player-h) + 28px);z-index:65;width:min(400px,calc(100vw - 24px));
+    background:#0a1512;border:1px solid var(--line);border-radius:14px;overflow:hidden;
+    box-shadow:0 18px 50px rgba(0,0,0,.55);display:none;
+  }
+  .vdock.open{display:block}
+  .vdock.mini{width:196px}
+  .vdock-head{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 8px 7px 14px;
+    font-size:13px;color:var(--ink-dim);letter-spacing:.04em;
+  }
+  .vdock-head span:first-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .vdock-btns{display:flex;gap:2px;flex:none}
+  .vdock-btns button{width:40px;height:40px;border-radius:9px;color:var(--ink-dim);font-size:17px;line-height:1}
+  .vdock-btns button:hover{background:rgba(201,168,106,.12);color:var(--gold-bright)}
+  .vdock-frame{aspect-ratio:16/9;background:#000;position:relative}
+  .vdock-frame iframe{width:100%;height:100%;display:block;border:0}
+  .dock-poster{position:absolute;inset:0;width:100%;height:100%;padding:0;cursor:pointer;background:#000;text-align:left}
+  .dock-poster[hidden]{display:none}
+  .dock-poster img{width:100%;height:100%;object-fit:cover;opacity:.92}
+  .dock-poster .dp-play{
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-58%);
+    width:60px;height:60px;border-radius:50%;background:rgba(201,168,106,.94);color:#181106;
+    display:flex;align-items:center;justify-content:center;font-size:22px;padding-left:4px;
+    box-shadow:0 8px 30px rgba(0,0,0,.5);
+  }
+  .dock-poster .dp-cap{
+    position:absolute;left:0;right:0;bottom:0;padding:26px 14px 10px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+    color:rgba(236,226,203,.94);background:linear-gradient(180deg,transparent,rgba(4,8,7,.85));
+  }
+  .vdock-alt{
+    display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding:9px 14px 11px;
+    font-size:12.5px;color:var(--ink-faint);border-top:1px solid var(--line-soft);
+  }
+  .vdock-alt a{color:var(--teal);white-space:nowrap}
+  .dock-fail{
+    position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+    padding:20px;text-align:center;background:#0a1512;color:var(--ink-dim);font-size:14.5px;
+  }
+  .dock-fail[hidden]{display:none}
+  .dock-fail p{margin:0;max-width:340px}
+  .dock-fail-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+  .video-facade .vf-fallback{
+    position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+    padding:20px;text-align:center;background:#0a1512;color:var(--ink-dim);font-size:15px;cursor:default;
+  }
+  .video-facade .vf-fallback p{margin:0;max-width:420px}
+  @media (max-width:820px){ .vdock{bottom:196px} }
+  .video-facade{
+    position:relative;margin-top:26px;border-radius:14px;overflow:hidden;cursor:pointer;
+    border:1px solid var(--line-soft);aspect-ratio:16/9;background:#000;
+  }
+  .video-facade img{width:100%;height:100%;object-fit:cover;opacity:.92;transition:transform .6s ease, opacity .3s}
+  .video-facade:hover img{transform:scale(1.03);opacity:1}
+  .video-facade .vf-play{
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-58%);
+    width:66px;height:66px;border-radius:50%;background:rgba(201,168,106,.94);color:#181106;
+    display:flex;align-items:center;justify-content:center;font-size:24px;padding-left:4px;
+    box-shadow:0 8px 30px rgba(0,0,0,.5);
+  }
+  .video-facade .vf-cap{
+    position:absolute;left:0;right:0;bottom:0;padding:30px 16px 12px;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:rgba(236,226,203,.94);background:linear-gradient(180deg,transparent,rgba(4,8,7,.85));
+  }
+  .p-spotify{
+    color:var(--ink-dim);text-decoration:none;font-size:13px;letter-spacing:.08em;flex:none;
+    padding:10px 6px;min-height:44px;display:inline-flex;align-items:center;
+  }
+  .p-spotify:hover{color:#1ed760}
+  @media (max-width:1000px){ .p-spotify{display:none} }
+  .btn-spotify:hover{border-color:#1ed760;color:#1ed760}
+
+  /* ---------- reveal on scroll / view transitions ---------- */
+  .rv{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s cubic-bezier(.2,.7,.2,1)}
+  .rv.in{opacity:1;transform:none}
+  .song-view.swap .song-art,.song-view.swap .song-body{animation:swapIn .55s cubic-bezier(.2,.7,.2,1) both}
+  .song-view.swap .song-body{animation-delay:.06s}
+  @keyframes swapIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+  .map-panel.open{animation:swapIn .5s ease both}
+  .video-facade iframe{width:100%;height:100%;display:block;border:0}
+  .video-facade.playing{cursor:default}
+
+  /* ---------- embedded spotify players ---------- */
+  .spotify-block{margin-top:26px;border:1px solid var(--line-soft);border-radius:20px;background:var(--panel);padding:26px 28px}
+  .spotify-block h3{font-size:27px;margin:0 0 6px}
+  .spotify-block p{color:var(--ink-dim);font-weight:300;margin:0 0 18px;max-width:660px}
+  .spotify-block iframe{width:100%;height:352px;border:0;border-radius:12px;display:block;background:#0a1512}
+  @media (max-width:640px){ .spotify-block{padding:22px 18px} .spotify-block iframe{height:232px} }
+  .spotify-embed{max-width:680px;margin:34px auto 0;text-align:left}
+  .spotify-embed .sp-cap{display:block;font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:10px;text-align:center}
+  .spotify-embed iframe{width:100%;height:152px;border:0;border-radius:12px;display:block;background:#0a1512}
+
+  .reduced-motion #stars,.reduced-motion #uniCanvas{display:none}
+  .reduced-motion .hero-emblem{animation:none}
+  .reduced-motion .map-route{animation:none}
+  .reduced-motion .eq i{animation:none;height:10px}
+  .reduced-motion .emblem-ring,.reduced-motion .emblem-glow,
+  .reduced-motion .uni-root.minor,
+  .reduced-motion .node.playing circle.core,.reduced-motion .node.active circle.core,
+  .reduced-motion .hero h1,.reduced-motion .hero .author,.reduced-motion .hero .lede,
+  .reduced-motion .hero .hero-cta,.reduced-motion .hero .hero-scroll,
+  .reduced-motion .song-view.swap .song-art,.reduced-motion .song-view.swap .song-body,
+  .reduced-motion .map-panel.open{animation:none}
+  .reduced-motion .rv{opacity:1;transform:none;transition:none}
+  .reduced-motion .pulse-dot{display:none}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    .hero-emblem,.map-route,.eq i,.emblem-ring,.emblem-glow,.uni-root.minor,
+    .node.playing circle.core,.node.active circle.core,
+    .hero h1,.hero .author,.hero .lede,.hero .hero-cta,.hero .hero-scroll{animation:none}
+    .rv{opacity:1;transform:none;transition:none}
+    .pulse-dot{display:none}
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <a class="brand" href="#inicio">
+    <img src="assets/emblema-header.png" alt="Emblema de Ancestralia: árbol de la vida y doble hélice de ADN" />
+    <span>Ancestralia<small>Javier Rubio</small></span>
+  </a>
+  <nav class="main" aria-label="Secciones">
+    <a href="#universo">Universo</a>
+    <a href="#cancion">Canciones</a>
+    <a href="#mapa">Mapa</a>
+    <a href="#historia">Historia</a>
+    <a href="#proceso">Proceso</a>
+    <a href="#nova">Nova</a>
+  </nav>
+  <button class="motion-btn" id="motionBtn" type="button" aria-pressed="false">Calmar movimiento</button>
+</header>
+
+<!-- ============ ENTRADA ============ -->
+<section class="hero" id="inicio" style="padding-top:110px">
+  <canvas id="stars" aria-hidden="true"></canvas>
+  <div class="emblem-wrap" id="emblemWrap">
+    <div class="emblem-glow" aria-hidden="true"></div>
+    <div class="emblem-ring r1" aria-hidden="true"></div>
+    <div class="emblem-ring r2" aria-hidden="true"></div>
+    <img class="hero-emblem" src="assets/emblema.jpg" alt="Emblema oficial de Ancestralia: el árbol de la vida cuyo tronco es una doble hélice de ADN, integrado sobre el fondo oscuro de la instalación" />
+  </div>
+  <h1>Ancestra<span class="gold">lia</span></h1>
+  <p class="author">Un álbum de Javier Rubio</p>
+  <p class="lede">Ninguno de nosotros es un punto de partida aislado. Somos el resultado de innumerables historias, generaciones, desplazamientos y encuentros. <em>Esto no es la página de un disco: es un lugar al que se entra.</em></p>
+  <div class="hero-cta">
+    <a class="btn btn-solid" href="#universo">Entrar en el universo</a>
+    <button class="btn btn-ghost" id="heroPlay" type="button">▶ Comenzar la escucha</button>
+    <a class="btn btn-ghost btn-spotify" href="#albumSpotify">Escuchar el álbum aquí</a>
+  </div>
+  <p class="hero-scroll">Desciende por las raíces</p>
+</section>
+
+<!-- ============ UNIVERSO ============ -->
+<section id="universo">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="num">El elemento central</span>
+      <h2>Un árbol, un mapa, una doble hélice</h2>
+      <p>Doce composiciones crecen desde un mismo tronco. Cada nodo es una canción; cada raíz, una conexión con las demás. Toca un nodo para entrar en su mundo y ver su vídeo oficial.</p>
+      <div class="rule"></div>
+    </div>
+    <div class="universe-stage">
+      <canvas id="uniCanvas" aria-hidden="true"></canvas>
+      <svg id="uniSvg" viewBox="0 0 1000 640" role="group" aria-label="Constelación interactiva de las doce canciones de Ancestralia"></svg>
+    </div>
+    <p class="uni-hint">Exploración libre o viaje lineal: el círculo se cierra donde empieza, en Nova Ancestralia.</p>
+    <div class="song-grid" id="songGrid"></div>
+  </div>
+</section>
+
+<!-- ============ CANCIÓN ============ -->
+<section id="cancion">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="num">Las doce composiciones</span>
+      <h2>Cada canción, un territorio</h2>
+      <p>Cada tema guarda su propio paisaje, su luz y su memoria. Desde aquí puedes leerlo, situarlo en el mapa y seguir sus conexiones con el resto del álbum.</p>
+      <div class="rule"></div>
+    </div>
+    <article class="song-view" id="songView" aria-live="polite"></article>
+    <div class="spotify-block" id="albumSpotify">
+      <h3>El álbum completo, sonando aquí</h3>
+      <p>Reproductor de Spotify integrado en la propia página: escucha las doce composiciones sin salir de la instalación. Con tu sesión de Spotify abierta suenan los temas completos; sin ella, una muestra de cada uno.</p>
+      <iframe src="https://open.spotify.com/embed/album/0h66VYMTglXQpvGmgoTW8b?utm_source=generator&theme=0" title="Reproductor de Spotify: álbum Ancestralia, de Javier Rubio" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MAPA ============ -->
+<section id="mapa">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="num">Cartografía viva</span>
+      <h2>El mapa de las raíces y las migraciones</h2>
+      <p>No es un mapa turístico ni una lección de historia: es la geografía emocional del álbum. Seis territorios unidos por rutas de luz. Elige un lugar y descubre qué canciones nacen de él.</p>
+      <div class="rule"></div>
+    </div>
+    <div class="map-stage">
+      <svg id="mapSvg" viewBox="0 0 1000 540" role="group" aria-label="Mapa artístico de conexiones entre Bretaña, Portugal, España, el norte de África, Italia y Cuba"></svg>
+    </div>
+    <div class="map-panel" id="mapPanel" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- ============ HISTORIA ============ -->
+<section id="historia">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="num">La historia del proyecto</span>
+      <h2>Un viaje circular entre el pasado y el futuro</h2>
+      <div class="rule"></div>
+    </div>
+    <div class="prose">
+      <p class="drop">Ancestralia es un proyecto musical y audiovisual de carácter conceptual y transmedia, desarrollado durante aproximadamente dos años. Su materia prima no es solo el sonido: es la pregunta de <strong>de dónde venimos</strong> y de todo lo que tuvo que ocurrir —viajes, encuentros, pérdidas, mezclas— para que existiéramos nosotros.</p>
+      <p>El álbum parte de una idea sencilla y vertiginosa: <strong>nadie empieza de cero</strong>. Detrás de cada persona hay generaciones que se marcharon, que llegaron, que se encontraron con otras culturas y las hicieron suyas. Esa memoria heredada —familiar, cultural y genética— es la que recorren las doce composiciones, como doce estaciones de un mismo viaje.</p>
+      <p>Por eso la estructura es <strong>circular</strong>: el recorrido nace en Ancestralia, desciende a las raíces, atraviesa las migraciones y los encuentros, y desemboca en Nova Ancestralia, donde el pasado no desaparece, sino que se transforma y sigue proyectándose hacia el futuro.</p>
+    </div>
+    <div class="circle-phases">
+      <div class="phase-card"><span class="ph-num">I — El origen</span><h3>Ancestralia</h3><p>El punto de partida: la intuición de que existe un lugar —interior y colectivo— del que procede todo lo demás.</p></div>
+      <div class="phase-card"><span class="ph-num">II — La memoria</span><h3>Raíces</h3><p>La memoria familiar, cultural y genética: lo que se hereda sin haberlo vivido y, sin embargo, nos constituye.</p></div>
+      <div class="phase-card"><span class="ph-num">III — El camino</span><h3>Migraciones</h3><p>Los desplazamientos, las maletas, los mares cruzados: cada partida transforma a quien se va y a quien se queda.</p></div>
+      <div class="phase-card"><span class="ph-num">IV — La mezcla</span><h3>Encuentros</h3><p>Las culturas se tocan, las lenguas se mezclan, las músicas se reconocen. De ese roce nace lo nuevo.</p></div>
+      <div class="phase-card final"><span class="ph-num">V — El renacimiento</span><h3>Nova Ancestralia</h3><p>La transformación y la continuidad: las raíces se convierten en ramas que se proyectan hacia el horizonte.</p></div>
+    </div>
+    <blockquote class="motto">«Un viaje hacia nuestras raíces para descubrir todo lo que todavía está por venir.»</blockquote>
+  </div>
+</section>
+
+<!-- ============ PROCESO ============ -->
+<section id="proceso">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="num">El proceso creativo</span>
+      <h2>Dos años entre la intuición humana y la inteligencia artificial</h2>
+      <p>Ancestralia se construyó en el estudio de Javier Rubio combinando composición, instrumentos del mundo, estaciones de trabajo de audio digital (DAW) e inteligencia artificial. La IA actúa aquí como una herramienta más dentro del proceso artístico —un instrumento nuevo en la mesa—, nunca como sustituta de la dirección creativa.</p>
+      <div class="rule"></div>
+    </div>
+    <div class="studio-grid">
+      <figure class="sg-a"><img src="assets/estudio1.jpg" alt="Vista general del estudio de Javier Rubio: mesa de producción con dos pantallas de DAW, guitarras, congas, handpan, cajón y acordeón" /><figcaption>El estudio: el lugar donde las raíces se convierten en sonido.</figcaption></figure>
+      <figure class="sg-b"><img src="assets/estudio2.jpg" alt="Javier Rubio reclinado en su estudio con auriculares, escuchando una mezcla frente a las pantallas del DAW" /><figcaption>La escucha: cada composición se revisa hasta que respira.</figcaption></figure>
+      <figure class="sg-c"><img src="assets/estudio3.jpg" alt="Javier Rubio trabajando con el ratón y el teclado frente a dos pantallas con sesiones de audio multipista" /><figcaption>La producción: capas de audio, edición y mezcla en el DAW.</figcaption></figure>
+      <figure class="sg-d"><img src="assets/estudio4.jpg" alt="Primer plano de Javier Rubio sonriendo mientras trabaja en su estudio, con un monitor de estudio y la sesión del DAW al fondo" /><figcaption>Javier Rubio, autor de Ancestralia.</figcaption></figure>
+    </div>
+    <div class="steps">
+      <div class="step"><b>Las ideas musicales</b><p>Melodías y atmósferas nacidas de instrumentos reales —guitarra, handpan, percusiones del mundo, acordeón— y de la memoria de los territorios que recorre el álbum.</p></div>
+      <div class="step"><b>La experimentación con IA</b><p>Generación y exploración de texturas, voces y universos visuales con inteligencia artificial, seleccionados y dirigidos criterio a criterio por el autor.</p></div>
+      <div class="step"><b>La producción en el DAW</b><p>Grabación, edición, mezcla y máster en la estación de trabajo digital: el punto donde lo orgánico y lo tecnológico terminan de fundirse.</p></div>
+      <div class="step"><b>Los universos visuales</b><p>Cada canción desarrolla su propia identidad visual —como la ilustración de «Aljamía»— para que el álbum pueda también contemplarse, no solo escucharse.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NOVA ============ -->
+<section id="nova">
+  <div class="wrap">
+    <img class="cover" src="assets/portada.jpg" alt="Portada oficial del álbum Ancestralia: medallón circular con el árbol de la vida, la doble hélice de ADN y los doce títulos alrededor" />
+    <h2>Nova Ancestralia</h2>
+    <p>El recorrido termina donde vuelve a empezar. Las raíces, transformadas, se proyectan hacia el horizonte: el pasado no desaparece, continúa en quien lo escucha ahora.</p>
+    <p class="final-line">Todos somos consecuencia de historias anteriores. Algo permanece, y continúa transmitiéndose.</p>
+    <div class="hero-cta">
+      <button class="btn btn-solid" id="novaPlay" type="button">Escuchar Nova Ancestralia</button>
+      <a class="btn btn-ghost" href="#universo">Volver al universo</a>
+    </div>
+    <div class="spotify-embed">
+      <span class="sp-cap">El álbum completo en Spotify · sin salir de la página</span>
+      <iframe src="https://open.spotify.com/embed/album/0h66VYMTglXQpvGmgoTW8b?utm_source=generator&theme=0" title="Reproductor de Spotify: álbum Ancestralia, de Javier Rubio" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p class="fbrand">Ancestralia</p>
+  <p>Álbum conceptual de Javier Rubio · Doce composiciones · Raíces — Migraciones — Encuentros — Nova Ancestralia</p>
+  <p>La música suena desde YouTube: vídeos del <a href="https://youtube.com/@inedit-music" target="_blank" rel="noopener">canal del autor</a> cuando el tema tiene vídeo propio, y de la <a href="https://youtube.com/playlist?list=OLAK5uy_mGTU3evU5lqQ050Twn6yLC7jr8lElFS0s&si=wINXPa1GmM-w7eB3" target="_blank" rel="noopener">lista oficial del álbum</a> en los demás casos. El álbum completo, también en <a href="https://open.spotify.com/album/0h66VYMTglXQpvGmgoTW8b" target="_blank" rel="noopener">Spotify</a>.</p>
+</footer>
+
+<!-- ============ VIDEO DOCK ============ -->
+<div class="vdock" id="vdock" aria-label="Vídeo oficial de YouTube">
+  <div class="vdock-head">
+    <span id="vdockTitle">Vídeo · Ancestralia</span>
+    <span class="vdock-btns">
+      <button type="button" id="vdockMini" aria-label="Reducir o ampliar el vídeo">–</button>
+      <button type="button" id="vdockClose" aria-label="Cerrar el vídeo">✕</button>
+    </span>
+  </div>
+  <div class="vdock-frame">
+    <iframe id="ytFrame" title="Vídeo oficial en YouTube" src="about:blank" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowfullscreen></iframe>
+    <button type="button" class="dock-poster" id="dockPoster" aria-label="Reanudar la reproducción" hidden>
+      <img id="dockPosterImg" src="assets/thumb-1.jpg" alt="" />
+      <span class="dp-play" aria-hidden="true">▶</span>
+      <span class="dp-cap">En pausa · Toca para seguir escuchando</span>
+    </button>
+    <div class="dock-fail" id="dockFail" hidden>
+      <p>Este visor no ha podido cargar el vídeo de YouTube dentro de la página.</p>
+      <div class="dock-fail-btns">
+        <button type="button" class="btn btn-ghost" id="dockRetry">Reintentar</button>
+        <a class="btn btn-ghost" id="dockFailLink" href="https://www.youtube.com/watch?v=hdOFMyl3OMc" target="_blank" rel="noopener">Verlo en YouTube</a>
+      </div>
+    </div>
+  </div>
+  <div class="vdock-alt">
+    <span>Si este visor no carga el vídeo,</span>
+    <a id="vdockAltLink" href="https://www.youtube.com/watch?v=hdOFMyl3OMc" target="_blank" rel="noopener">ábrelo en YouTube</a>
+  </div>
+</div>
+
+<!-- ============ PLAYER ============ -->
+<div class="player" role="region" aria-label="Reproductor de Ancestralia">
+  <img class="cover" id="pCover" src="assets/portada.jpg" alt="Portada de Ancestralia" title="Ir a la ficha de la canción" />
+  <div class="now">
+    <b id="pTitle">Ancestralia</b>
+    <span id="pPhase">I · El origen</span>
+  </div>
+  <div class="eq" id="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+  <div class="p-controls">
+    <button class="p-btn" id="pPrev" type="button" aria-label="Canción anterior"><svg viewBox="0 0 24 24"><path d="M6 5h2v14H6zM20 5v14L9.5 12z"/></svg></button>
+    <button class="p-btn main" id="pPlay" type="button" aria-label="Reproducir o pausar"><svg viewBox="0 0 24 24" id="pPlayIcon"><path d="M8 5v14l11-7z"/></svg></button>
+    <button class="p-btn" id="pNext" type="button" aria-label="Canción siguiente"><svg viewBox="0 0 24 24"><path d="M16 5h2v14h-2zM4 5v14l10.5-7z"/></svg></button>
+  </div>
+  <div class="p-progress">
+    <time id="tCur">0:00</time>
+    <div class="bar" id="pBar" role="slider" aria-label="Progreso de la canción" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0"><div class="track"><div class="fill" id="pFill"></div></div></div>
+    <time id="tDur">0:00</time>
+  </div>
+  <button class="p-btn" id="pVideoBtn" type="button" aria-label="Mostrar u ocultar el vídeo" title="Vídeo"><svg viewBox="0 0 24 24"><path d="M21 6.5l-4 2v-2c0-.6-.4-1-1-1H4c-.6 0-1 .4-1 1v11c0 .6.4 1 1 1h12c.6 0 1-.4 1-1v-2l4 2v-11zM10 15.5v-7l6 3.5-6 3.5z"/></svg></button>
+  <a class="p-spotify" href="#albumSpotify" title="Abrir el reproductor de Spotify integrado">Spotify</a>
+  <div class="p-vol">
+    <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg>
+    <input class="vol" id="pVol" type="range" min="0" max="100" value="80" aria-label="Volumen" />
+  </div>
+</div>
+<script>
+(function(){
+"use strict";
+var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ================= DATA ================= */
+var SONGS = [
+ { yt:"hdOFMyl3OMc", vsrc:"lista", title:"Ancestralia", phase:"I · El origen", phaseName:"Ancestralia — el origen", territory:"El umbral de todos los territorios",
+   color:"#e8c987", glyph:"A", root:196.00, scale:[0,2,4,7,9], tempo:3400, dur:214, wave:"triangle",
+   desc:["La puerta de entrada al álbum y a esta instalación. «Ancestralia» nombra el territorio interior del que parte todo el viaje: la certeza de que no somos un comienzo, sino una continuación.",
+         "Su melodía funciona como un tronco: de ella se ramifican motivos que reaparecerán, transformados, a lo largo de las once composiciones siguientes."],
+   conn:[1,3,11] },
+ { yt:"YvA5iTDe8KM", vsrc:"canal", title:"Aljamía", phase:"IV · Los encuentros", phaseName:"Encuentros", territory:"España · al-Ándalus y el norte de África",
+   color:"#d99a4e", glyph:"ع", root:146.83, scale:[0,1,4,5,7,8,11], tempo:2600, dur:236, wave:"sine", img:"assets/aljamia.jpg",
+   imgCap:"Ilustración oficial de «Aljamía»: músicos en un patio andalusí",
+   desc:["La aljamía era la escritura de una lengua en el alfabeto de otra: el romance escrito con caracteres árabes. Esta composición celebra exactamente eso: dos mundos que aprenden a leerse el uno en el otro.",
+         "Un patio andalusí al anochecer —laúd, guitarra, violín, flauta, percusión— sirve de imagen a un encuentro que no borra las diferencias: las pone a tocar juntas."],
+   conn:[0,5,9] },
+ { yt:"_ejbOd1HYhQ", vsrc:"lista", title:"Mareas cruzadas", phase:"III · Las migraciones", phaseName:"Migraciones", territory:"El Atlántico · Portugal y Bretaña",
+   color:"#57c7b2", glyph:"≈", root:174.61, scale:[0,2,3,7,9], tempo:3000, dur:228, wave:"sine",
+   desc:["Dos costas que se miran a través del mismo océano. «Mareas cruzadas» sigue las corrientes que durante siglos unieron —y separaron— a las gentes del Atlántico europeo.",
+         "El vaivén de la marea marca el pulso de la pieza: llegar y partir, partir y volver, como hacen las familias que el mar divide y reúne."],
+   conn:[8,9,6] },
+ { yt:"paVNcsC5gFE", vsrc:"lista", title:"La línea de la vida", phase:"II · Las raíces", phaseName:"Raíces", territory:"La genealogía · la memoria familiar",
+   color:"#a8c686", glyph:"§", root:164.81, scale:[0,2,4,5,9], tempo:3600, dur:205, wave:"triangle",
+   desc:["Una sola línea que se bifurca sin romperse nunca: padres, abuelos, bisabuelos… «La línea de la vida» dibuja el árbol genealógico como lo que es, una partitura de nombres que nos precede.",
+         "Es la composición más íntima del álbum: la memoria familiar y genética convertida en melodía que se hereda de variación en variación."],
+   conn:[0,4,10] },
+ { yt:"MV-1q7BgPjg", vsrc:"canal", title:"Racó de món", phase:"II · Las raíces", phaseName:"Raíces", territory:"El Mediterráneo · Cataluña",
+   color:"#c9a86a", glyph:"R", root:220.00, scale:[0,2,4,7,9], tempo:3300, dur:198, wave:"sine",
+   desc:["En catalán, un «racó de món» es un rincón del mundo: ese lugar pequeño y concreto —un pueblo, una calle, una casa— que sin embargo contiene el universo entero de quien lo habita.",
+         "Frente a los grandes desplazamientos del álbum, esta pieza defiende la raíz quieta: quedarse también es una forma de viajar hacia dentro."],
+   conn:[3,10,5] },
+ { yt:"nm8tJpW4PSs", vsrc:"lista", title:"Ha da passa' 'a nuttata", phase:"IV · Los encuentros", phaseName:"Encuentros", territory:"Italia · Nápoles",
+   color:"#e07a5f", glyph:"N", root:130.81, scale:[0,2,3,5,7,8,10], tempo:2900, dur:221, wave:"triangle",
+   desc:["«Tiene que pasar la noche», dice el título en napolitano: la frase que se repite quien atraviesa un tiempo oscuro con la confianza de que amanecerá. Es una de las expresiones más queridas de la cultura partenopea.",
+         "La composición habita esa noche larga —la de las despedidas y las esperas— y la atraviesa sin prisa, hasta la primera luz."],
+   conn:[1,6,10] },
+ { yt:"jLGME80LCFE", vsrc:"canal", title:"Maletas de cartón", phase:"III · Las migraciones", phaseName:"Migraciones", territory:"España · la emigración",
+   color:"#b08968", glyph:"M", root:155.56, scale:[0,2,3,7,8], tempo:3100, dur:243, wave:"sine",
+   desc:["Antes de las maletas con ruedas hubo maletas de cartón atadas con cuerda. En ellas cupo la vida entera de millones de personas que se marcharon a buscar trabajo y futuro lejos de casa.",
+         "Esta es la composición de las despedidas en la estación y del peso exacto de lo que se lleva: poco equipaje, toda la memoria."],
+   conn:[2,8,5] },
+ { yt:"aKugHMzE-sQ", vsrc:"lista", title:"Anaoudek", phase:"II · Las raíces", phaseName:"Raíces", territory:"Bretaña",
+   color:"#7fb5a3", glyph:"B", root:185.00, scale:[0,2,3,7,9], tempo:3200, dur:209, wave:"triangle",
+   desc:["«Anaoudek» evoca los apellidos bretones que significan «el conocido», «el reconocido»: la identidad como algo que la comunidad te devuelve al nombrarte.",
+         "Desde la Bretaña de granito y niebla, la pieza pregunta qué queda de nosotros en la lengua y los nombres que heredamos de un lugar."],
+   conn:[8,2,3] },
+ { yt:"Of0n99bVxLo", vsrc:"lista", title:"Praias de mil areias / Iroise", phase:"III · Las migraciones", phaseName:"Migraciones", territory:"Portugal · Ericeira y el mar de Iroise, Bretaña",
+   color:"#4fa8c9", glyph:"P", root:196.00, scale:[0,2,4,7,11], tempo:2800, dur:251, wave:"sine",
+   desc:["Playas de mil arenas: la costa portuguesa de Ericeira —el fuerte de Milreu, la pequeña Praia de Mil Regos— unida al mar de Iroise bretón en una sola composición de doble orilla.",
+         "Es también un homenaje a los emigrantes que partieron «a hacer las Américas»: la mirada seria hacia la estela del barco, el pañuelo quieto en la mano, la tierra que se aleja. Su universo visual se ha desarrollado como videoclip de 55 planos."],
+   conn:[2,7,9] },
+ { yt:"m1226wpqrqI", vsrc:"canal", title:"Frases de agua y sal", phase:"III · Las migraciones", phaseName:"Migraciones", territory:"El Atlántico · rumbo a Cuba",
+   color:"#6ec1d8", glyph:"S", root:174.61, scale:[0,2,4,5,9], tempo:3400, dur:217, wave:"sine",
+   desc:["Lo que el mar escribe y borra: frases de agua y sal. Esta composición sigue la ruta atlántica hacia el Caribe, donde tantas historias peninsulares continuaron —transformadas— al otro lado del océano.",
+         "La presencia de Cuba en el álbum es sutil, como una escala lejana que se intuye en el ritmo y en el acento de la melodía."],
+   conn:[2,8,1] },
+ { yt:"7lkPZ1HfuD0", vsrc:"lista", title:"S'esvaeix", phase:"V · La transformación", phaseName:"Transformación", territory:"El Mediterráneo · lo que se desvanece",
+   color:"#b8a9d9", glyph:"E", root:233.08, scale:[0,2,3,7,10], tempo:3800, dur:196, wave:"sine",
+   desc:["En catalán, «s'esvaeix» significa «se desvanece». Penúltima estación del viaje: las lenguas, los oficios y los rostros que el tiempo disuelve poco a poco, como la niebla sobre el mar.",
+         "Pero desvanecerse no es desaparecer: es cambiar de estado. Lo que se desvanece en una generación reaparece, irreconocible y fiel, en la siguiente."],
+   conn:[4,5,11] },
+ { yt:"a4rhU5Rl_5M", vsrc:"lista", title:"Nova Ancestralia", phase:"V · El renacimiento", phaseName:"Nova Ancestralia — el futuro", territory:"El horizonte · todos los territorios",
+   color:"#e8c987", glyph:"✦", root:196.00, scale:[0,2,4,7,9,11], tempo:2700, dur:264, wave:"triangle",
+   desc:["El círculo se cierra abriéndose. «Nova Ancestralia» recoge los motivos de las once composiciones anteriores y los proyecta hacia adelante: no es una repetición del origen, es su renacimiento.",
+         "Las raíces se convierten en ramas nuevas. El viaje vuelve a comenzar — ahora, en quien escucha."],
+   conn:[0,10,2] }
+];
+
+var PLACES = [
+ { id:"bretana", name:"Bretaña", x:415, y:118, songs:[7,8,2],
+   text:"Granito, niebla y una lengua celta que resiste. La Bretaña aporta al álbum la identidad que se defiende quedándose: apellidos que nombran, costas que miran al mismo Atlántico que Portugal." },
+ { id:"portugal", name:"Portugal", x:296, y:308, songs:[8,2],
+   text:"La costa de Ericeira, el Forte de Milreu y la Praia de Mil Regos: desde estas playas de mil arenas partieron generaciones enteras hacia el Atlántico. Portugal es la orilla de la despedida." },
+ { id:"espana", name:"España", x:428, y:282, songs:[1,6,4],
+   text:"El territorio de la mezcla: el patio andalusí de «Aljamía», las maletas de cartón de la emigración y el rincón mediterráneo de «Racó de món». Aquí se cruzan casi todas las rutas del álbum." },
+ { id:"africa", name:"Norte de África", x:452, y:408, songs:[1],
+   text:"La otra orilla del estrecho, presente en la escritura aljamiada, en los ritmos y en los instrumentos que cruzaron el Mediterráneo en ambas direcciones durante siglos." },
+ { id:"italia", name:"Italia", x:598, y:238, songs:[5],
+   text:"Nápoles y su lengua: «Ha da passa' 'a nuttata». Italia entra en el álbum como la noche que hay que atravesar con paciencia mediterránea hasta que amanezca." },
+ { id:"cuba", name:"Cuba", x:96, y:330, songs:[9],
+   text:"La presencia más sutil del mapa: el destino lejano de la ruta atlántica, una escala que se intuye en «Frases de agua y sal» más que mostrarse. El viaje continúa al otro lado del océano." }
+];
+var ROUTES = [[0,2],[2,1],[2,3],[2,4],[1,5],[0,1]]; /* indices into PLACES */
+
+/* ================= UNIVERSE SVG ================= */
+var NS = "http://www.w3.org/2000/svg";
+function el(name, attrs){ var e=document.createElementNS(NS,name); for(var k in attrs) e.setAttribute(k,attrs[k]); return e; }
+var uniSvg = document.getElementById("uniSvg");
+var CX=500, CY=322;
+var pos = [];
+(function(){
+  /* two organic rings: 6 + 6 nodes */
+  var i, a, r;
+  for(i=0;i<6;i++){ a = -Math.PI/2 + i*(Math.PI*2/6) + 0.22; r = 158 + ((i%2)?10:-8);
+    pos.push({x:CX+Math.cos(a)*r*1.55, y:CY+Math.sin(a)*r*0.92}); }
+  for(i=0;i<6;i++){ a = -Math.PI/2 + 0.42 + i*(Math.PI*2/6); r = 252 + ((i%2)?-12:14);
+    pos.push({x:CX+Math.cos(a)*r*1.62, y:CY+Math.sin(a)*r*1.06}); }
+  /* order nodes around: keep album order by angle */
+  var order = pos.map(function(p,i){ return {i:i, ang:Math.atan2((p.y-CY)/0.95,(p.x-CX))}; });
+  order.sort(function(u,v){ return u.ang - v.ang; });
+  var sorted = new Array(12);
+  /* start at top (Ancestralia) going clockwise */
+  var startIdx = 0, best = 1e9;
+  order.forEach(function(o,k){ var d = Math.abs(o.ang + Math.PI/2); if(d<best){best=d;startIdx=k;} });
+  for(var k=0;k<12;k++){ sorted[(k - startIdx + 12)%12] = pos[order[k].i]; }
+  pos = sorted;
+})();
+
+var nodeEls = [];
+(function buildUniverse(){
+  [150, 235].forEach(function(r){
+    uniSvg.appendChild(el("ellipse",{cx:CX, cy:CY, rx:r*1.62, ry:r*1.02, "class":"uni-ring"}));
+  });
+  /* connection threads between related songs */
+  var drawn = {};
+  SONGS.forEach(function(s,i){
+    s.conn.forEach(function(j){
+      var key = Math.min(i,j)+"-"+Math.max(i,j);
+      if(drawn[key]) return; drawn[key]=1;
+      var mx=(pos[i].x+pos[j].x)/2, my=(pos[i].y+pos[j].y)/2 - 26;
+      uniSvg.appendChild(el("path",{d:"M"+pos[i].x+" "+pos[i].y+" Q"+mx+" "+my+" "+pos[j].x+" "+pos[j].y, "class":"uni-root minor", "data-conn":i+"-"+j}));
+    });
+  });
+  /* roots from centre */
+  pos.forEach(function(p,i){
+    var mx=(CX+p.x)/2 + (p.y-CY)*0.18, my=(CY+p.y)/2 - (p.x-CX)*0.10;
+    uniSvg.appendChild(el("path",{d:"M"+CX+" "+CY+" Q"+mx+" "+my+" "+p.x+" "+p.y, "class":"uni-root"}));
+  });
+  /* centre emblem */
+  var c = el("g",{});
+  c.appendChild(el("circle",{cx:CX, cy:CY, r:34, fill:"#0d1a16", stroke:"rgba(201,168,106,.6)", "stroke-width":1.4}));
+  c.appendChild(el("circle",{cx:CX, cy:CY, r:27, fill:"none", stroke:"rgba(87,199,178,.35)", "stroke-width":1, "stroke-dasharray":"3 5"}));
+  var ct = el("text",{x:CX, y:CY+7, "text-anchor":"middle", fill:"#e8c987", "font-size":"21", "font-family":"Cormorant Garamond, serif", "font-style":"italic"});
+  ct.textContent = "❧"; c.appendChild(ct); uniSvg.appendChild(c);
+
+  SONGS.forEach(function(s,i){
+    var g = el("g",{"class":"node", tabindex:"0", role:"button", "aria-label":"Abrir la ficha de "+s.title});
+    g.appendChild(el("circle",{cx:pos[i].x, cy:pos[i].y, r:30, "class":"halo"}));
+    var core = el("circle",{cx:pos[i].x, cy:pos[i].y, r:13 + (i===0||i===11?3:0), "class":"core",
+      fill:"#0a1512", stroke:s.color});
+    core.style.color = s.color;
+    g.appendChild(core);
+    var dot = el("circle",{cx:pos[i].x, cy:pos[i].y, r:4.5, fill:s.color});
+    g.appendChild(dot);
+    var num = el("text",{x:pos[i].x, y:pos[i].y-24, "text-anchor":"middle", "class":"nnum"});
+    num.textContent = "Nº "+(i+1); g.appendChild(num);
+    var anchor = pos[i].x < 170 ? "start" : (pos[i].x > 830 ? "end" : "middle");
+    var labX = anchor==="start" ? pos[i].x-16 : (anchor==="end" ? pos[i].x+16 : pos[i].x);
+    var lab = el("text",{x:labX, y:pos[i].y+34, "text-anchor":anchor, "class":"nlabel"});
+    if(s.title.indexOf("/") > -1){
+      var parts = s.title.split("/");
+      var ts1 = el("tspan",{x:labX, dy:0}); ts1.textContent = parts[0].trim();
+      var ts2 = el("tspan",{x:labX, dy:16, "font-size":"14.5"}); ts2.textContent = "/ " + parts[1].trim();
+      lab.appendChild(ts1); lab.appendChild(ts2);
+    } else {
+      lab.textContent = s.title;
+    }
+    g.appendChild(lab);
+    g.addEventListener("click", function(){ openSong(i, true); });
+    g.addEventListener("keydown", function(ev){ if(ev.key==="Enter"||ev.key===" "){ ev.preventDefault(); openSong(i,true); } });
+    uniSvg.appendChild(g); nodeEls.push(g);
+  });
+})();
+
+/* song grid */
+var grid = document.getElementById("songGrid");
+var chipEls = [];
+SONGS.forEach(function(s,i){
+  var b = document.createElement("button");
+  b.type="button"; b.className="song-chip";
+  b.innerHTML = '<span class="dot" style="background:'+s.color+';color:'+s.color+'"></span><span><b></b><span></span></span>';
+  b.querySelector("b").textContent = (i+1)+". "+s.title;
+  b.querySelectorAll("span")[2].textContent = s.phaseName;
+  b.addEventListener("click", function(){ openSong(i, true); });
+  grid.appendChild(b); chipEls.push(b);
+});
+
+/* ================= SONG VIEW ================= */
+var songView = document.getElementById("songView");
+var currentView = 0;
+function openSong(i, scroll){
+  currentView = i;
+  inlineActive = false;
+  var s = SONGS[i];
+  nodeEls.forEach(function(n,k){ n.classList.toggle("active", k===i); });
+  chipEls.forEach(function(c,k){ c.classList.toggle("active", k===i); });
+  var art = s.img
+    ? '<img src="'+s.img+'" alt="" /><div class="veil" style="background:linear-gradient(200deg, transparent 40%, rgba(6,13,12,.55))"></div><p class="art-cap">'+s.imgCap+'</p>'
+    : '<div class="veil" style="background:radial-gradient(ellipse 80% 70% at 30% 20%, '+s.color+'33, transparent 60%), radial-gradient(ellipse 70% 80% at 80% 90%, rgba(46,125,110,.35), transparent 60%), #0a1512"></div><div class="big-glyph" aria-hidden="true">'+s.glyph+'</div><p class="art-cap">'+s.territory+'</p>';
+  var conn = s.conn.map(function(j){
+    return '<button type="button" class="conn-chip" data-conn="'+j+'"><i style="color:'+SONGS[j].color+';background:'+SONGS[j].color+'"></i>'+SONGS[j].title+'</button>';
+  }).join("");
+  songView.innerHTML =
+    '<div class="song-art">'+art+'</div>'+
+    '<div class="song-body">'+
+      '<span class="phase">'+s.phase+'</span>'+
+      '<h3>'+s.title+'</h3>'+
+      '<span class="track-no">Composición '+(i+1)+' de 12</span>'+
+      s.desc.map(function(p){ return '<p class="desc">'+p+'</p>'; }).join("")+
+      '<div class="meta-row">'+
+        '<span class="meta-pill">Territorio · <b>'+s.territory+'</b></span>'+
+        '<span class="meta-pill">Movimiento · <b>'+s.phaseName+'</b></span>'+
+      '</div>'+
+      '<div class="video-facade" id="svFacade" role="button" tabindex="0" aria-label="Reproducir el vídeo oficial de '+s.title+'">'+
+        '<img src="assets/thumb-'+(i+1)+'.jpg" alt="Miniatura del vídeo oficial de «'+s.title+'» en YouTube" />'+
+        '<span class="vf-play" aria-hidden="true">▶</span>'+
+        '<span class="vf-cap">Vídeo oficial · '+(s.vsrc==="canal" ? "Canal del autor — Inedit-Music" : "Lista oficial del álbum en YouTube")+'</span>'+
+      '</div>'+
+      '<div class="conn-row"><h4>Conecta con</h4><div class="conn-chips">'+conn+'</div></div>'+
+      '<div class="song-actions">'+
+        '<button type="button" class="btn btn-play-song" id="svPlay">▶ Escuchar esta composición</button>'+
+        '<a class="btn btn-ghost btn-spotify" href="#albumSpotify">Escuchar en Spotify aquí</a>'+
+        '<a class="btn btn-ghost" href="https://www.youtube.com/watch?v='+s.yt+'" target="_blank" rel="noopener">Ver en YouTube</a>'+
+        '<button type="button" class="btn btn-ghost" id="svPrev">← Anterior</button>'+
+        '<button type="button" class="btn btn-ghost" id="svNext">Siguiente →</button>'+
+      '</div>'+
+      '<p class="listen-note" style="margin-top:16px"><b>La música es la real.</b> Pulsa la miniatura para ver y oír el vídeo oficial aquí mismo, sin salir de la página. Con «Escuchar esta composición», la música te acompaña desde el reproductor inferior mientras sigues recorriendo la instalación. Cada tema suena con el vídeo del canal del autor (Inedit-Music) cuando tiene vídeo propio, y con el de la lista oficial del álbum en los demás casos. Y justo debajo de esta ficha tienes el álbum entero en el reproductor de Spotify, también sin salir de la página.</p>'+
+    '</div>';
+  songView.querySelectorAll("[data-conn]").forEach(function(ch){
+    ch.addEventListener("click", function(){ openSong(parseInt(ch.getAttribute("data-conn"),10), false);
+      document.getElementById("cancion").scrollIntoView({behavior: reduced?"auto":"smooth"}); });
+  });
+  document.getElementById("svPlay").addEventListener("click", function(){ playTrack(i, true); });
+  var facade = document.getElementById("svFacade");
+  function loadInline(){
+    if(inlineActive) return;
+    inlineActive = true;
+    stopDockAudio();
+    facade.classList.add("playing");
+    facade.removeAttribute("role");
+    facade.removeAttribute("tabindex");
+    var ifr = document.createElement("iframe");
+    ifr.title = "Vídeo oficial de «"+s.title+"» en YouTube";
+    ifr.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
+    ifr.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen");
+    ifr.setAttribute("allowfullscreen", "");
+    var loaded = false;
+    ifr.addEventListener("load", function(){ loaded = true; });
+    facade.innerHTML = "";
+    facade.appendChild(ifr);
+    ifr.src = embedURL(s.yt, true);
+    /* Some in-app viewers (e.g. WhatsApp's internal WebView) refuse to
+       load YouTube inside iframes and paint their own error page. If
+       the embed never reports a load, swap that dead frame for an
+       honest panel with the way out, instead of leaving the error. */
+    setTimeout(function(){
+      if(loaded || !facade.isConnected) return;
+      facade.innerHTML = '<div class="vf-fallback"><p>Este visor no ha podido cargar el vídeo de YouTube dentro de la página.</p><a class="btn btn-ghost" href="https://www.youtube.com/watch?v='+s.yt+'" target="_blank" rel="noopener">Verlo en YouTube</a></div>';
+    }, 7000);
+  }
+  facade.addEventListener("click", loadInline);
+  facade.addEventListener("keydown", function(ev){ if(ev.key==="Enter"||ev.key===" "){ ev.preventDefault(); loadInline(); } });
+  document.getElementById("svPrev").addEventListener("click", function(){ openSong((i+11)%12, false); });
+  document.getElementById("svNext").addEventListener("click", function(){ openSong((i+1)%12, false); });
+  songView.classList.remove("swap");
+  void songView.offsetWidth;
+  songView.classList.add("swap");
+  if(scroll) document.getElementById("cancion").scrollIntoView({behavior: reduced?"auto":"smooth"});
+}
+
+/* ================= MAP ================= */
+var mapSvg = document.getElementById("mapSvg");
+var mapPanel = document.getElementById("mapPanel");
+var placeEls = [];
+(function buildMap(){
+  /* faint coastline suggestion: abstract contour paths */
+  var coast = "M120 90 Q300 40 470 80 Q640 40 830 110 Q940 160 900 260 Q950 380 820 450 Q640 520 430 470 Q240 510 140 420 Q60 330 90 210 Q100 130 120 90 Z";
+  mapSvg.appendChild(el("path",{d:coast, fill:"rgba(87,199,178,.04)", stroke:"rgba(201,168,106,.18)", "stroke-width":1.2}));
+  ROUTES.forEach(function(r){
+    var a=PLACES[r[0]], b=PLACES[r[1]];
+    var mx=(a.x+b.x)/2, my=(a.y+b.y)/2 - Math.abs(a.x-b.x)*0.18 - 20;
+    mapSvg.appendChild(el("path",{d:"M"+a.x+" "+a.y+" Q"+mx+" "+my+" "+b.x+" "+b.y, "class":"map-route"}));
+  });
+  PLACES.forEach(function(p,idx){
+    var g = el("g",{"class":"map-place", tabindex:"0", role:"button", "aria-label":"Ver el territorio "+p.name});
+    g.appendChild(el("circle",{cx:p.x, cy:p.y, r:17, "class":"ring"}));
+    g.appendChild(el("circle",{cx:p.x, cy:p.y, r:5, "class":"dot"}));
+    var t = el("text",{x:p.x, y:p.y-28, "text-anchor":"middle"});
+    t.textContent = p.name; g.appendChild(t);
+    g.appendChild(el("circle",{cx:p.x, cy:p.y, r:32, fill:"transparent"}));
+    g.addEventListener("click", function(){ openPlace(idx); });
+    g.addEventListener("keydown", function(ev){ if(ev.key==="Enter"||ev.key===" "){ ev.preventDefault(); openPlace(idx); } });
+    mapSvg.appendChild(g); placeEls.push(g);
+  });
+})();
+function openPlace(idx){
+  var p = PLACES[idx];
+  placeEls.forEach(function(g,k){ g.classList.toggle("active", k===idx); });
+  var chips = p.songs.map(function(j){
+    return '<button type="button" class="conn-chip" data-song="'+j+'"><i style="background:'+SONGS[j].color+'"></i>'+(j+1)+'. '+SONGS[j].title+'</button>';
+  }).join("");
+  mapPanel.innerHTML = "<h3>"+p.name+"</h3><p>"+p.text+"</p><div class='conn-chips'>"+chips+"</div>";
+  mapPanel.classList.add("open");
+  mapPanel.querySelectorAll("[data-song]").forEach(function(ch){
+    ch.addEventListener("click", function(){ openSong(parseInt(ch.getAttribute("data-song"),10), true); });
+  });
+  mapPanel.scrollIntoView({behavior: reduced?"auto":"smooth", block:"nearest"});
+}
+
+/* ================= YOUTUBE PLAYER (persistent) =================
+   Priority per the author: if a song has a video on his own channel
+   (Inedit-Music), that video is used; otherwise, the video from the
+   official album playlist (Javier Rubio - Topic). Each SONGS entry
+   carries its chosen video in .yt and its source in .vsrc. */
+var playing = false, cur = 0, pollID = null;
+var pMode = "idle"; /* idle | embed */
+var embLoaded = false, embElapsed = 0, embLast = 0, inlineActive = false;
+var embConfirmed = false, embPendingPlay = false, embToken = 0, embWatch = null;
+var pTitle=document.getElementById("pTitle"), pPhase=document.getElementById("pPhase"),
+    pFill=document.getElementById("pFill"), tCur=document.getElementById("tCur"), tDur=document.getElementById("tDur"),
+    pPlayIcon=document.getElementById("pPlayIcon"), eq=document.getElementById("eq"), pBar=document.getElementById("pBar");
+var dock = document.getElementById("vdock"), dockTitle = document.getElementById("vdockTitle");
+var frame = document.getElementById("ytFrame");
+var dockPoster = document.getElementById("dockPoster"), dockPosterImg = document.getElementById("dockPosterImg");
+var dockAltLink = document.getElementById("vdockAltLink");
+var dockFail = document.getElementById("dockFail"), dockFailLink = document.getElementById("dockFailLink");
+var pVolEl = document.getElementById("pVol");
+
+function fmt(sec){ sec=Math.max(0,Math.floor(sec||0)); return Math.floor(sec/60)+":"+("0"+(sec%60)).slice(-2); }
+function setPlayUI(){
+  pPlayIcon.innerHTML = playing ? '<path d="M7 5h4v14H7zM13 5h4v14h-4z"/>' : '<path d="M8 5v14l11-7z"/>';
+  eq.classList.toggle("on", playing);
+  nodeEls.forEach(function(n,k){ n.classList.toggle("playing", playing && k===cur); });
+}
+function openDock(){ dock.classList.add("open"); dock.classList.remove("mini"); }
+function embedURL(id, autoplay, startAt){
+  var u = "https://www.youtube.com/embed/"+id+"?autoplay="+(autoplay?1:0)+"&rel=0&playsinline=1&modestbranding=1&enablejsapi=1";
+  if(startAt && startAt > 2) u += "&start="+Math.floor(startAt);
+  return u;
+}
+/* Playback uses plain embedded YouTube players only: the standard
+   <iframe> embed, whose src is assigned synchronously inside the
+   visitor's own tap — the one pattern every browser honours for
+   starting playback with sound. The IFrame API player used before
+   silently never started inside the installation's sandboxed frame:
+   the poster loaded, but its postMessage play commands were dropped
+   and the state machine waited forever in "loading", leaving a dead
+   play button. So play, pause, track changes and seeking are all done
+   by (re)loading the embed. Pausing unloads it and keeps a poster
+   with the position; resuming restarts the embed at that position. */
+function embPosition(){
+  return (playing && embConfirmed) ? embElapsed + (Date.now() - embLast)/1000 : embElapsed;
+}
+function armWatchdog(){
+  if(embWatch) clearTimeout(embWatch);
+  var token = ++embToken;
+  embWatch = setTimeout(function(){
+    if(token !== embToken || embConfirmed || !embLoaded) return;
+    /* The embed never confirmed it is alive: restricted in-app viewers
+       refuse YouTube iframes and paint their own error page instead.
+       Stop pretending, unload the dead frame and offer the way out. */
+    frame.src = "about:blank";
+    frame.style.display = "none";
+    embLoaded = false; embPendingPlay = false; playing = false;
+    dockFailLink.href = "https://www.youtube.com/watch?v=" + SONGS[cur].yt;
+    dockFail.hidden = false;
+    setPlayUI();
+  }, 8000);
+}
+function startEmbed(i, autoplay, startAt){
+  cur = i;
+  pMode = "embed"; embLoaded = true;
+  embElapsed = startAt || 0; embLast = Date.now();
+  /* Playback is not claimed until the embed itself confirms it is
+     alive (its onReady message); until then the bar stays honest. */
+  embConfirmed = false; embPendingPlay = !!autoplay; playing = false;
+  dockPoster.hidden = true;
+  dockFail.hidden = true;
+  frame.style.display = "block";
+  frame.src = embedURL(SONGS[i].yt, autoplay, startAt);
+  if(!pollID) pollID = setInterval(tick, 500);
+  armWatchdog();
+  setPlayUI();
+}
+function pauseEmbed(){
+  embElapsed = embPosition();
+  embToken++; if(embWatch) clearTimeout(embWatch);
+  embPendingPlay = false;
+  frame.src = "about:blank";
+  frame.style.display = "none";
+  embLoaded = false;
+  dockPosterImg.src = "assets/thumb-"+(cur+1)+".jpg";
+  dockPoster.hidden = false;
+  playing = false;
+  setPlayUI();
+}
+/* The embed announces itself with an onReady postMessage once the real
+   YouTube player is running; an error page inside a restricted viewer
+   never sends it. That message is the only trusted "it is playing"
+   signal, and it also unlocks the volume commands below. */
+window.addEventListener("message", function(ev){
+  if(!frame.contentWindow || ev.source !== frame.contentWindow) return;
+  var d = ev.data;
+  if(typeof d !== "string") return;
+  if(d.indexOf('"onReady"') === -1 && d.indexOf('"infoDelivery"') === -1) return;
+  if(!embLoaded || embConfirmed) return;
+  embConfirmed = true;
+  if(embWatch) clearTimeout(embWatch);
+  if(embPendingPlay){ playing = true; embLast = Date.now(); }
+  applyVolume();
+  setPlayUI();
+});
+frame.addEventListener("load", function(){
+  if(frame.src.indexOf("youtube.com/embed") === -1) return;
+  try { frame.contentWindow.postMessage('{"event":"listening","id":"ytFrame","channel":"widget"}', "https://www.youtube.com"); } catch(e){}
+});
+function sendCmd(func, args){
+  if(!frame.contentWindow) return;
+  try { frame.contentWindow.postMessage(JSON.stringify({event:"command", func:func, args:args || []}), "https://www.youtube.com"); } catch(e){}
+}
+function applyVolume(){
+  var v = parseInt(pVolEl.value, 10);
+  if(isNaN(v)) return;
+  if(v <= 0) sendCmd("mute");
+  else { sendCmd("unMute"); sendCmd("setVolume", [v]); }
+}
+pVolEl.addEventListener("input", applyVolume);
+function stopDockAudio(){
+  if(pMode === "embed" && embLoaded) pauseEmbed();
+  else if(playing){ playing = false; setPlayUI(); }
+}
+
+function tick(){
+  if(pMode !== "embed") return;
+  var dur = SONGS[cur].dur || 0;
+  if(dur <= 0) return;
+  var pos = embPosition();
+  var t = Math.min(pos, dur);
+  pFill.style.width = (t/dur*100)+"%";
+  pBar.setAttribute("aria-valuenow", Math.round(t/dur*100));
+  tCur.textContent = fmt(t); tDur.textContent = fmt(dur);
+  if(playing && embConfirmed && pos >= dur) playTrack((cur+1)%12, true);
+}
+function playTrack(i, autoplay){
+  var changed = i !== cur;
+  cur = i;
+  var s = SONGS[i];
+  pTitle.textContent = s.title;
+  pPhase.textContent = (i+1) + "/12 · " + s.phase.split("·")[1].trim();
+  dockTitle.textContent = "Vídeo · " + s.title + (s.vsrc==="canal" ? " · Canal del autor" : " · Lista oficial del álbum");
+  dockAltLink.href = "https://www.youtube.com/watch?v=" + s.yt;
+  dockFailLink.href = "https://www.youtube.com/watch?v=" + s.yt;
+  document.documentElement.style.setProperty("--accent", s.color);
+  pFill.style.width = "0%"; tCur.textContent = "0:00"; tDur.textContent = "0:00";
+  if(inlineActive || currentView !== i) openSong(i, false);
+  nodeEls.forEach(function(n,k){ n.classList.toggle("active", k===i); });
+  chipEls.forEach(function(c,k){ c.classList.toggle("active", k===i); });
+  if(autoplay){
+    startEmbed(i, true, 0);
+    openDock();
+  } else if(changed){
+    embElapsed = 0;
+    if(embLoaded) startEmbed(i, false, 0);
+    else if(!dockPoster.hidden) dockPosterImg.src = "assets/thumb-"+(i+1)+".jpg";
+  }
+  setPlayUI();
+}
+function togglePlay(){
+  if(playing || embPendingPlay){ pauseEmbed(); return; }
+  /* Start (or resume) synchronously inside the tap, so the browser
+     grants the embed autoplay with sound. */
+  startEmbed(cur, true, embElapsed);
+  openDock();
+}
+document.getElementById("pPlay").addEventListener("click", togglePlay);
+document.getElementById("pPrev").addEventListener("click", function(){ playTrack((cur+11)%12, playing); });
+document.getElementById("pNext").addEventListener("click", function(){ playTrack((cur+1)%12, playing); });
+document.getElementById("heroPlay").addEventListener("click", function(){ playTrack(0, true); });
+document.getElementById("novaPlay").addEventListener("click", function(){ playTrack(11, true); });
+document.getElementById("pCover").addEventListener("click", function(){ openSong(cur, true); });
+dockPoster.addEventListener("click", function(){ startEmbed(cur, true, embElapsed); });
+document.getElementById("dockRetry").addEventListener("click", function(){ startEmbed(cur, true, embElapsed); openDock(); });
+document.getElementById("pVideoBtn").addEventListener("click", function(){
+  if(dock.classList.contains("open")) dock.classList.remove("open");
+  else { openDock(); if(pMode === "idle") startEmbed(cur, false, 0); }
+});
+document.getElementById("vdockMini").addEventListener("click", function(){ dock.classList.toggle("mini"); });
+document.getElementById("vdockClose").addEventListener("click", function(){
+  dock.classList.remove("open"); stopDockAudio();
+});
+function seekTo(clientX){
+  if(pMode !== "embed") return;
+  var r = pBar.getBoundingClientRect();
+  var ratio = Math.min(1, Math.max(0, (clientX - r.left)/r.width));
+  var d = SONGS[cur].dur || 0;
+  if(d > 0) startEmbed(cur, playing, ratio*d);
+}
+pBar.addEventListener("click", function(ev){ seekTo(ev.clientX); });
+pBar.addEventListener("keydown", function(ev){
+  if(pMode !== "embed") return;
+  var d = SONGS[cur].dur || 0;
+  if(d <= 0) return;
+  if(ev.key==="ArrowRight") startEmbed(cur, playing, Math.min(d, embPosition()+10));
+  if(ev.key==="ArrowLeft") startEmbed(cur, playing, Math.max(0, embPosition()-10));
+});
+
+/* ================= PARTICLE CANVASES ================= */
+var motionOn = !reduced;
+function makeParticles(canvas, count, linkDist, react){
+  var ctx = canvas.getContext("2d"), W=0, H=0, pts=[], raf=null;
+  var mx=-9999, my=-9999;
+  if(react){
+    canvas.parentElement.addEventListener("mousemove", function(ev){
+      var r = canvas.getBoundingClientRect(); mx = ev.clientX - r.left; my = ev.clientY - r.top;
+    });
+    canvas.parentElement.addEventListener("mouseleave", function(){ mx = -9999; my = -9999; });
+  }
+  function resize(){
+    var r = canvas.parentElement.getBoundingClientRect();
+    W = canvas.width = Math.floor(r.width); H = canvas.height = Math.floor(r.height);
+  }
+  function init(){
+    pts = [];
+    for(var i=0;i<count;i++) pts.push({x:Math.random()*W, y:Math.random()*H, vx:(Math.random()-.5)*0.22, vy:(Math.random()-.5)*0.22, r:Math.random()*1.6+0.4});
+  }
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    var i,j,p,q,dx,dy,d;
+    for(i=0;i<pts.length;i++){ p=pts[i];
+      p.x+=p.vx; p.y+=p.vy;
+      if(react && mx>-999){
+        var ddx=p.x-mx, ddy=p.y-my, dd=Math.sqrt(ddx*ddx+ddy*ddy);
+        if(dd>0.1 && dd<120){ var f=(120-dd)/120*0.9; p.x+=ddx/dd*f; p.y+=ddy/dd*f; }
+      }
+      if(p.x<0||p.x>W) p.vx*=-1; if(p.y<0||p.y>H) p.vy*=-1;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,6.283); ctx.fillStyle="rgba(232,201,135,.55)"; ctx.fill();
+    }
+    for(i=0;i<pts.length;i++) for(j=i+1;j<pts.length;j++){ p=pts[i]; q=pts[j];
+      dx=p.x-q.x; dy=p.y-q.y; d=dx*dx+dy*dy;
+      if(d<linkDist*linkDist){ ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y);
+        ctx.strokeStyle="rgba(87,199,178,"+(0.14*(1-Math.sqrt(d)/linkDist))+")"; ctx.lineWidth=1; ctx.stroke(); }
+    }
+    if(motionOn) raf=requestAnimationFrame(frame);
+  }
+  resize(); init(); if(motionOn) frame();
+  window.addEventListener("resize", function(){ resize(); init(); });
+  return { restart:function(){ if(motionOn && !raf) frame(); }, stop:function(){ if(raf) cancelAnimationFrame(raf); raf=null; ctx.clearRect(0,0,W,H); } };
+}
+var heroP = null, uniP = null;
+if(!reduced){
+  heroP = makeParticles(document.getElementById("stars"), 55, 130, true);
+  uniP = makeParticles(document.getElementById("uniCanvas"), 40, 120);
+}
+var motionBtn = document.getElementById("motionBtn");
+function setMotion(on){
+  motionOn = on;
+  document.body.classList.toggle("reduced-motion", !on);
+  motionBtn.textContent = on ? "Calmar movimiento" : "Reanudar movimiento";
+  motionBtn.setAttribute("aria-pressed", String(!on));
+  if(heroP){ on ? heroP.restart() : heroP.stop(); }
+  if(uniP){ on ? uniP.restart() : uniP.stop(); }
+}
+if(reduced){ document.body.classList.add("reduced-motion"); motionBtn.textContent="Reanudar movimiento"; motionOn=false; }
+motionBtn.addEventListener("click", function(){ setMotion(!motionOn); });
+
+/* ================= LIGHT PULSES along roots & routes ================= */
+var pulseSets = [];
+function addPulses(svg, paths, count, colors){
+  if(!paths.length) return;
+  var items = [];
+  for(var k=0;k<count;k++){
+    var p = paths[Math.floor(Math.random()*paths.length)];
+    var col = colors[k % colors.length];
+    var dot = el("circle",{r:3, "class":"pulse-dot", fill:col, opacity:"0"});
+    dot.style.filter = "drop-shadow(0 0 6px "+col+")";
+    svg.appendChild(dot);
+    items.push({path:p, len:p.getTotalLength(), t:Math.random(), sp:0.05 + Math.random()*0.07, dot:dot});
+  }
+  pulseSets.push({svg:svg, items:items, visible:false});
+}
+addPulses(uniSvg, Array.prototype.slice.call(uniSvg.querySelectorAll("path.uni-root")), 8, ["#e8c987","#57c7b2"]);
+addPulses(mapSvg, Array.prototype.slice.call(mapSvg.querySelectorAll("path.map-route")), 5, ["#57c7b2","#e8c987"]);
+if("IntersectionObserver" in window){
+  var vio = new IntersectionObserver(function(es){
+    es.forEach(function(en){
+      pulseSets.forEach(function(s){ if(s.svg === en.target) s.visible = en.isIntersecting; });
+    });
+  },{threshold:.05});
+  vio.observe(uniSvg); vio.observe(mapSvg);
+} else {
+  pulseSets.forEach(function(s){ s.visible = true; });
+}
+var lastPulse = 0;
+function pulseLoop(ts){
+  requestAnimationFrame(pulseLoop);
+  if(reduced || !motionOn) return;
+  var dt = Math.min(50, ts - (lastPulse || ts)); lastPulse = ts;
+  pulseSets.forEach(function(set){
+    if(!set.visible) return;
+    set.items.forEach(function(it){
+      it.t += it.sp * (dt/1000);
+      if(it.t > 1) it.t = 0;
+      var pt = it.path.getPointAtLength(it.t * it.len);
+      it.dot.setAttribute("cx", pt.x);
+      it.dot.setAttribute("cy", pt.y);
+      it.dot.setAttribute("opacity", String(Math.sin(it.t * Math.PI) * 0.95));
+    });
+  });
+}
+if(!reduced) requestAnimationFrame(pulseLoop);
+
+/* ================= SCROLL REVEAL ================= */
+(function(){
+  var targets = document.querySelectorAll(".sec-head, .universe-stage, #songGrid, .song-view, .map-stage, .phase-card, .step, .studio-grid figure, .prose, blockquote.motto, #nova .wrap > *, footer p");
+  targets.forEach(function(elm, k){
+    elm.classList.add("rv");
+    elm.style.transitionDelay = ((k % 5) * 70) + "ms";
+  });
+  if(reduced || !("IntersectionObserver" in window)){
+    targets.forEach(function(e){ e.classList.add("in"); });
+    return;
+  }
+  var rio = new IntersectionObserver(function(es){
+    es.forEach(function(en){
+      if(en.isIntersecting){ en.target.classList.add("in"); rio.unobserve(en.target); }
+    });
+  },{threshold:.1, rootMargin:"0px 0px -6% 0px"});
+  targets.forEach(function(e){ rio.observe(e); });
+})();
+
+/* ================= HERO PARALLAX ================= */
+(function(){
+  var wrap = document.getElementById("emblemWrap");
+  var heroSec = document.querySelector(".hero");
+  if(!wrap || !heroSec || reduced) return;
+  if(!window.matchMedia("(pointer:fine)").matches) return;
+  heroSec.addEventListener("mousemove", function(ev){
+    if(!motionOn) return;
+    var r = heroSec.getBoundingClientRect();
+    var dx = (ev.clientX - r.left)/r.width - .5;
+    var dy = (ev.clientY - r.top)/r.height - .5;
+    wrap.style.transform = "translate("+(dx*16)+"px,"+(dy*12)+"px)";
+  });
+  heroSec.addEventListener("mouseleave", function(){ wrap.style.transform = ""; });
+})();
+
+/* init */
+openSong(0, false);
+playTrack(0, false);
+openPlace(2);
+})();
+</script>
+</body>
+</html>
