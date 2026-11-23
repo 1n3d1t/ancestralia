@@ -156,8 +156,15 @@
       radial-gradient(ellipse 40% 32% at 50% 50%, rgba(201,168,106,.12), transparent 70%),
       #081210;
   }
-  #uniCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-  #uniSvg{position:relative;display:block;width:100%;height:auto}
+  #uniCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
+  #uniSvg{position:relative;display:block;width:100%;height:auto;z-index:3}
+  .uni-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:0;opacity:.92;pointer-events:none}
+  .uni-veil{
+    position:absolute;inset:0;z-index:1;pointer-events:none;
+    background:radial-gradient(ellipse 72% 62% at 50% 50%, transparent 52%, rgba(8,18,16,.5) 88%, rgba(8,18,16,.78) 100%);
+    box-shadow:inset 0 0 120px 34px rgba(8,18,16,.85);
+  }
+  .node .nlabel,.node .nnum{paint-order:stroke;stroke:rgba(6,13,12,.85);stroke-width:3.5px}
   .uni-root{fill:none;stroke:rgba(201,168,106,.34);stroke-width:1.4;stroke-linecap:round}
   .uni-root.minor{stroke:rgba(87,199,178,.16);stroke-width:1}
   .uni-ring{fill:none;stroke:rgba(201,168,106,.10);stroke-dasharray:2 7}
@@ -326,6 +333,33 @@
   footer{padding:44px 0 20px;text-align:center;color:var(--ink-faint);font-size:13.5px}
   footer .fbrand{font-family:"Cormorant Garamond",serif;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-dim);font-size:16px}
 
+  /* ---------- contacto ---------- */
+  .contact-card{
+    margin-top:28px;border:1px solid var(--line-soft);border-radius:20px;background:var(--panel);
+    padding:34px 36px;max-width:760px;
+  }
+  .c-field{margin-bottom:18px}
+  .c-field label{display:block;font-size:12.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;font-weight:600}
+  .c-field input,.c-field textarea{
+    width:100%;background:#0a1512;border:1px solid var(--line-soft);border-radius:10px;
+    padding:13px 15px;color:var(--ink);font:inherit;font-size:16px;line-height:1.5;
+  }
+  .c-field textarea{min-height:150px;resize:vertical}
+  .c-field input:focus,.c-field textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,106,.18)}
+  .c-hp{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none}
+  .contact-send{margin-top:4px}
+  .contact-send[disabled]{opacity:.55;cursor:wait;transform:none}
+  .form-ok{
+    border:1px solid rgba(87,199,178,.45);border-radius:12px;background:rgba(87,199,178,.08);
+    padding:20px 22px;color:var(--ink);font-size:16.5px;
+  }
+  .form-ok b{font-family:"Cormorant Garamond",serif;font-size:22px;display:block;margin-bottom:4px;color:var(--teal)}
+  .form-err{
+    display:none;border:1px solid rgba(224,122,95,.55);border-radius:12px;background:rgba(224,122,95,.08);
+    padding:14px 18px;color:var(--ink);font-size:15px;margin-top:16px;
+  }
+  @media (max-width:640px){ .contact-card{padding:26px 20px} }
+
   /* ---------- player ---------- */
   .player{
     position:fixed;left:0;right:0;bottom:0;z-index:70;height:var(--player-h);
@@ -455,6 +489,7 @@
     <a href="#historia">Historia</a>
     <a href="#proceso">Proceso</a>
     <a href="#nova">Nova</a>
+    <a href="#contacto">Contacto</a>
   </nav>
   <button class="motion-btn" id="motionBtn" type="button" aria-pressed="false">Calmar movimiento</button>
 </header>
@@ -489,6 +524,8 @@
       <div class="rule"></div>
     </div>
     <div class="universe-stage">
+      <img class="uni-bg" src="assets/arbol-helice.webp" alt="" aria-hidden="true" />
+      <div class="uni-veil" aria-hidden="true"></div>
       <canvas id="uniCanvas" aria-hidden="true"></canvas>
       <svg id="uniSvg" viewBox="0 0 1000 640" role="group" aria-label="Constelación interactiva de las doce canciones de Ancestralia"></svg>
     </div>
@@ -590,6 +627,43 @@
     <div class="spotify-embed" id="spotifyUnico">
       <span class="sp-cap">El álbum completo en Spotify · sin salir de la página</span>
       <iframe src="https://open.spotify.com/embed/album/0h66VYMTglXQpvGmgoTW8b?utm_source=generator&theme=0" title="Reproductor de Spotify: álbum Ancestralia, de Javier Rubio" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACTO ============ -->
+<section id="contacto">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="num">Contacto</span>
+      <h2>Escríbenos</h2>
+      <p>Si el viaje te ha movido algo —una memoria, una raíz, una pregunta—, déjanos un mensaje aquí mismo. Llega directamente al buzón del proyecto, y te responderemos al correo que nos dejes.</p>
+      <div class="rule"></div>
+    </div>
+    <div class="contact-card">
+      <form id="contactForm" method="post">
+        <div class="c-field">
+          <label for="cfName">Tu nombre</label>
+          <input id="cfName" name="name" type="text" autocomplete="name" required />
+        </div>
+        <div class="c-field">
+          <label for="cfEmail">Tu correo electrónico</label>
+          <input id="cfEmail" name="email" type="email" autocomplete="email" required />
+        </div>
+        <div class="c-field">
+          <label for="cfMsg">Tu mensaje</label>
+          <textarea id="cfMsg" name="message" required></textarea>
+        </div>
+        <div class="c-hp" aria-hidden="true">
+          <label>No rellenar este campo<input id="cfHoney" name="_honey" type="text" tabindex="-1" autocomplete="off" /></label>
+        </div>
+        <button class="btn btn-solid contact-send" id="contactSend" type="submit">Enviar mensaje</button>
+        <p class="form-err" id="contactErr" role="alert">El mensaje no ha podido enviarse. Comprueba tu conexión e inténtalo de nuevo en unos instantes.</p>
+      </form>
+      <div class="form-ok" id="contactOk" role="status" style="display:none">
+        <b>Mensaje enviado</b>
+        Gracias por escribir. Tu mensaje va de camino: te responderemos al correo que nos has dejado.
+      </div>
     </div>
   </div>
 </section>
@@ -696,7 +770,7 @@ var SONGS = [
    conn:[4,5,11] },
  { yt:"a4rhU5Rl_5M", vsrc:"lista", title:"Nova Ancestralia", phase:"V · El renacimiento", phaseName:"Nova Ancestralia — el futuro", territory:"El horizonte · todos los territorios",
    color:"#e8c987", glyph:"✦", root:196.00, scale:[0,2,4,7,9,11], tempo:2700, dur:264, wave:"triangle",
-   desc:["Nova Ancestralia parte con suavidad de los motivos del primer tema del disco, pero pronto evoluciona y crece abriéndose hacia nuevos caminos: las raíces se transforman en ramas nuevas y el viaje continúa. La pieza fusiona influencias mediterráneas y percusiones tradicionales del norte de África con la energía del rock progresivo andaluz; hacia la mitad del recorrido irrumpe una sección de cuerdas —evocando el sonido de las orquestas árabes (firqat)— que impulsa la intensidad hasta el clímax, antes de que las últimas notas devuelvan la música a su cauce inicial reposado."],
+   desc:["Nova Ancestralia parte con los mismos motivos del primer tema del disco, pero pronto evoluciona y crece abriéndose hacia nuevos caminos: las raíces se transforman en ramas nuevas y el viaje continúa. La pieza fusiona influencias mediterráneas y percusiones tradicionales del norte de África con la energía del rock progresivo andaluz; hacia la mitad del recorrido irrumpe una sección de cuerdas —evocando el sonido de las orquestas árabes (firqat)— que impulsa la intensidad hasta el clímax, antes de que las últimas notas devuelvan la música a su cauce inicial reposado."],
    conn:[0,10,2] }
 ];
 
@@ -1216,7 +1290,7 @@ if(!reduced) requestAnimationFrame(pulseLoop);
 
 /* ================= SCROLL REVEAL ================= */
 (function(){
-  var targets = document.querySelectorAll(".sec-head, .universe-stage, #songGrid, .song-view, .map-stage, .phase-card, .step, .studio-grid figure, .prose, blockquote.motto, #nova .wrap > *, footer p");
+  var targets = document.querySelectorAll(".sec-head, .universe-stage, #songGrid, .song-view, .map-stage, .phase-card, .step, .studio-grid figure, .prose, blockquote.motto, .contact-card, #nova .wrap > *, footer p");
   targets.forEach(function(elm, k){
     elm.classList.add("rv");
     elm.style.transitionDelay = ((k % 5) * 70) + "ms";
@@ -1247,6 +1321,62 @@ if(!reduced) requestAnimationFrame(pulseLoop);
     wrap.style.transform = "translate("+(dx*16)+"px,"+(dy*12)+"px)";
   });
   heroSec.addEventListener("mouseleave", function(){ wrap.style.transform = ""; });
+})();
+
+/* ================= CONTACT FORM =================
+   The form posts through a form-to-email relay (FormSubmit AJAX
+   endpoint), so messages land in the project's mailbox without the
+   address ever appearing in the page's visible text. A honeypot
+   field traps bots; the confirmation shows in the page itself. */
+(function(){
+  var form = document.getElementById("contactForm");
+  if(!form) return;
+  var ok = document.getElementById("contactOk"),
+      err = document.getElementById("contactErr"),
+      btn = document.getElementById("contactSend");
+  form.addEventListener("submit", function(ev){
+    ev.preventDefault();
+    err.style.display = "none";
+    if(document.getElementById("cfHoney").value){
+      /* honeypot filled: a bot — pretend success, send nothing */
+      form.style.display = "none"; ok.style.display = "block"; return;
+    }
+    var name = document.getElementById("cfName").value.trim(),
+        email = document.getElementById("cfEmail").value.trim(),
+        msg = document.getElementById("cfMsg").value.trim();
+    if(!name || !email || !msg){ err.style.display = "block"; return; }
+    btn.disabled = true; btn.textContent = "Enviando…";
+    /* The destination mailbox is assembled at runtime so the full
+       address never appears as a literal anywhere in the page —
+       neither in its visible text nor as a contiguous string a
+       scraper can lift from the source. */
+    var relay = "https://formsubmit.co/ajax/" +
+      ["gest", "ion.ine", "dit.mu", "sic"].join("") + "@" +
+      ["gm", "ail.c", "om"].join("");
+    fetch(relay, {
+      method: "POST",
+      headers: {"Content-Type": "application/json", "Accept": "application/json"},
+      body: JSON.stringify({
+        name: name,
+        email: email,
+        message: msg,
+        _replyto: email,
+        _subject: "Mensaje desde la web de Ancestralia",
+        _template: "table",
+        _captcha: "false",
+        _honey: ""
+      })
+    }).then(function(r){
+      return r.json().then(function(d){ return {ok: r.ok, d: d}; });
+    }).then(function(res){
+      if(res.ok && res.d && (res.d.success === "true" || res.d.success === true)){
+        form.style.display = "none"; ok.style.display = "block";
+      } else { throw new Error("relay"); }
+    }).catch(function(){
+      btn.disabled = false; btn.textContent = "Enviar mensaje";
+      err.style.display = "block";
+    });
+  });
 })();
 
 /* init */
