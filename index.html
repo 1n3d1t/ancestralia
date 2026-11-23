@@ -229,12 +229,6 @@
   .song-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px;align-items:center}
   .btn-play-song{background:var(--teal);color:#06231d;font-weight:700}
   .btn-play-song:hover{background:#79d8c6}
-  .listen-note{
-    font-size:14.5px;color:var(--ink-dim);max-width:560px;line-height:1.55;
-    border:1px solid var(--line-soft);border-left:2px solid var(--teal);
-    padding:13px 16px;border-radius:10px;background:rgba(87,199,178,.06);
-  }
-  .listen-note b{color:var(--ink)}
   .song-verses{
     margin-top:24px;border:1px solid var(--line-soft);border-left:2px solid var(--gold);
     background:rgba(201,168,106,.05);padding:20px 22px;border-radius:10px;
@@ -692,8 +686,7 @@ var SONGS = [
    conn:[2,7,9] },
  { yt:"m1226wpqrqI", vsrc:"canal", title:"Frases de agua y sal", phase:"III · Las migraciones", phaseName:"Migraciones", territory:"El Atlántico · rumbo a Cuba",
    color:"#6ec1d8", glyph:"S", root:174.61, scale:[0,2,4,5,9], tempo:3400, dur:217, wave:"sine",
-   desc:["Lo que el mar escribe y borra: frases de agua y sal. Esta composición sigue la ruta atlántica hacia el Caribe, donde tantas historias peninsulares continuaron —transformadas— al otro lado del océano.",
-         "La presencia de Cuba en el álbum es sutil, como una escala lejana que se intuye en el ritmo y en el acento de la melodía."],
+   desc:[],
    verses:"Cada estela es un verso que no se repite,\nun pensamiento que al mar se deja caer,\nuna confidencia entre viento y oleaje\nque se borra antes de acabar de nacer.\n\nDiario líquido sin archivo posible,\ncaligrafía de espuma que no deja señal,\ncapítulos breves de una existencia,\nescritos en Frases de agua y sal.",
    conn:[2,8,1] },
  { yt:"7lkPZ1HfuD0", vsrc:"lista", title:"S'esvaeix", phase:"V · La transformación", phaseName:"Transformación", territory:"El Mediterráneo · la puesta de sol y la memoria",
@@ -703,8 +696,7 @@ var SONGS = [
    conn:[4,5,11] },
  { yt:"a4rhU5Rl_5M", vsrc:"lista", title:"Nova Ancestralia", phase:"V · El renacimiento", phaseName:"Nova Ancestralia — el futuro", territory:"El horizonte · todos los territorios",
    color:"#e8c987", glyph:"✦", root:196.00, scale:[0,2,4,7,9,11], tempo:2700, dur:264, wave:"triangle",
-   desc:["El círculo se cierra abriéndose. «Nova Ancestralia» recoge los motivos de las once composiciones anteriores y los proyecta hacia adelante: no es una repetición del origen, es su renacimiento.",
-         "Las raíces se convierten en ramas nuevas. El viaje vuelve a comenzar — ahora, en quien escucha."],
+   desc:["Nova Ancestralia parte con suavidad de los motivos del primer tema del disco, pero pronto evoluciona y crece abriéndose hacia nuevos caminos: las raíces se transforman en ramas nuevas y el viaje continúa. La pieza fusiona influencias mediterráneas y percusiones tradicionales del norte de África con la energía del rock progresivo andaluz; hacia la mitad del recorrido irrumpe una sección de cuerdas —evocando el sonido de las orquestas árabes (firqat)— que impulsa la intensidad hasta el clímax, antes de que las últimas notas devuelvan la música a su cauce inicial reposado."],
    conn:[0,10,2] }
 ];
 
@@ -861,7 +853,6 @@ function openSong(i, scroll){
         '<button type="button" class="btn btn-ghost" id="svPrev">← Anterior</button>'+
         '<button type="button" class="btn btn-ghost" id="svNext">Siguiente →</button>'+
       '</div>'+
-      '<p class="listen-note" style="margin-top:16px"><b>La música es la real.</b> Con «Escuchar esta composición», el tema suena solo en audio desde el reproductor inferior —sin ningún vídeo sobre la página— y te acompaña mientras sigues recorriendo la instalación. Cada tema suena con el vídeo del canal del autor (Inedit-Music) cuando tiene vídeo propio, y con el de la lista oficial del álbum en los demás casos; si quieres ver el vídeo oficial, ábrelo con «Ver en YouTube». Y al final del recorrido, en Nova Ancestralia, tienes el álbum entero en el reproductor de Spotify, también sin salir de la página.</p>'+
     '</div>';
   songView.querySelectorAll("[data-conn]").forEach(function(ch){
     ch.addEventListener("click", function(){ openSong(parseInt(ch.getAttribute("data-conn"),10), false);
@@ -1038,6 +1029,10 @@ window.addEventListener("message", function(ev){
     return;
   }
   if(d.event === "infoDelivery" && d.info && embLoaded){
+    /* Any state report proves the player is alive, not just
+       onReady: the watchdog must never kill a track that is
+       actually playing. */
+    if(!embConfirmed){ embConfirmed = true; if(embWatch) clearTimeout(embWatch); }
     if(typeof d.info.currentTime === "number"){
       embElapsed = d.info.currentTime; embLast = Date.now();
     }
@@ -1059,7 +1054,14 @@ function tick(){
   pFill.style.width = (t/dur*100)+"%";
   pBar.setAttribute("aria-valuenow", Math.round(t/dur*100));
   tCur.textContent = fmt(t); tDur.textContent = fmt(dur);
-  if(playing && pos >= dur + 1.5) playTrack((cur+1)%12, true);
+  /* No auto-advance from this clock: it starts counting the moment
+     the embed is told to load — seconds before the sound actually
+     begins (player load + buffering) — and SONGS[].dur is only a
+     hand-written table of estimates. Advancing on it cut every
+     track short by that margin. A track now ends only when the
+     embed itself reports its real "ended" state (playerState 0,
+     in the message listener above), so each song plays in full;
+     this clock only paints the progress bar. */
 }
 function playTrack(i, autoplay){
   cur = i;
