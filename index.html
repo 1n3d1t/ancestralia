@@ -1346,13 +1346,10 @@ if(!reduced) requestAnimationFrame(pulseLoop);
         msg = document.getElementById("cfMsg").value.trim();
     if(!name || !email || !msg){ err.style.display = "block"; return; }
     btn.disabled = true; btn.textContent = "Enviando…";
-    /* The destination mailbox is assembled at runtime so the full
-       address never appears as a literal anywhere in the page —
-       neither in its visible text nor as a contiguous string a
-       scraper can lift from the source. */
-    var relay = "https://formsubmit.co/ajax/" +
-      ["gest", "ion.ine", "dit.mu", "sic"].join("") + "@" +
-      ["gm", "ail.c", "om"].join("");
+    /* The form posts to the official FormSubmit alias for this form,
+       so the destination mailbox never appears anywhere in the page —
+       neither in its visible text nor anywhere in the source. */
+    var relay = "https://formsubmit.co/ajax/7f99c0a5526200253af39d6d28c096fd";
     fetch(relay, {
       method: "POST",
       headers: {"Content-Type": "application/json", "Accept": "application/json"},
