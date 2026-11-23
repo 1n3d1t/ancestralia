@@ -197,7 +197,6 @@
     display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);
   }
   .song-left{display:flex;flex-direction:column;gap:16px;align-self:start;min-width:0}
-  .song-left .video-facade{margin-top:0}
   .song-art{position:relative;aspect-ratio:1/1;background:#0a1512;overflow:hidden}
   .song-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
   .song-art .veil{position:absolute;inset:0}
@@ -386,71 +385,8 @@
   }
   @media (max-width:480px){ .player{gap:8px;padding:10px 12px} .player .now b{font-size:17px} .player .now span{letter-spacing:.03em} }
 
-  /* ---------- video dock + facade ---------- */
-  .vdock{
-    position:fixed;right:16px;bottom:calc(var(--player-h) + 28px);z-index:65;width:min(400px,calc(100vw - 24px));
-    background:#0a1512;border:1px solid var(--line);border-radius:14px;overflow:hidden;
-    box-shadow:0 18px 50px rgba(0,0,0,.55);display:none;
-  }
-  .vdock.open{display:block}
-  .vdock.mini{width:196px}
-  .vdock-head{
-    display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 8px 7px 14px;
-    font-size:13px;color:var(--ink-dim);letter-spacing:.04em;
-  }
-  .vdock-head span:first-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .vdock-btns{display:flex;gap:2px;flex:none}
-  .vdock-btns button{width:40px;height:40px;border-radius:9px;color:var(--ink-dim);font-size:17px;line-height:1}
-  .vdock-btns button:hover{background:rgba(201,168,106,.12);color:var(--gold-bright)}
-  .vdock-frame{aspect-ratio:16/9;background:#000;position:relative}
-  .vdock-frame iframe{width:100%;height:100%;display:block;border:0}
-  .dock-poster{position:absolute;inset:0;width:100%;height:100%;padding:0;cursor:pointer;background:#000;text-align:left}
-  .dock-poster[hidden]{display:none}
-  .dock-poster img{width:100%;height:100%;object-fit:cover;opacity:.92}
-  .dock-poster .dp-play{
-    position:absolute;top:50%;left:50%;transform:translate(-50%,-58%);
-    width:60px;height:60px;border-radius:50%;background:rgba(201,168,106,.94);color:#181106;
-    display:flex;align-items:center;justify-content:center;font-size:22px;padding-left:4px;
-    box-shadow:0 8px 30px rgba(0,0,0,.5);
-  }
-  .dock-poster .dp-cap{
-    position:absolute;left:0;right:0;bottom:0;padding:26px 14px 10px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;
-    color:rgba(236,226,203,.94);background:linear-gradient(180deg,transparent,rgba(4,8,7,.85));
-  }
-  .vdock-alt{
-    display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding:9px 14px 11px;
-    font-size:12.5px;color:var(--ink-faint);border-top:1px solid var(--line-soft);
-  }
-  .vdock-alt a{color:var(--teal);white-space:nowrap}
-  .dock-fail{
-    position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
-    padding:20px;text-align:center;background:#0a1512;color:var(--ink-dim);font-size:14.5px;
-  }
-  .dock-fail[hidden]{display:none}
-  .dock-fail p{margin:0;max-width:340px}
-  .dock-fail-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
-  .video-facade .vf-fallback{
-    position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
-    padding:20px;text-align:center;background:#0a1512;color:var(--ink-dim);font-size:15px;cursor:default;
-  }
-  .video-facade .vf-fallback p{margin:0;max-width:420px}
-  @media (max-width:820px){ .vdock{bottom:196px} }
-  .video-facade{
-    position:relative;margin-top:26px;border-radius:14px;overflow:hidden;cursor:pointer;
-    border:1px solid var(--line-soft);aspect-ratio:16/9;background:#000;
-  }
-  .video-facade img{width:100%;height:100%;object-fit:cover;opacity:.92;transition:transform .6s ease, opacity .3s}
-  .video-facade:hover img{transform:scale(1.03);opacity:1}
-  .video-facade .vf-play{
-    position:absolute;top:50%;left:50%;transform:translate(-50%,-58%);
-    width:66px;height:66px;border-radius:50%;background:rgba(201,168,106,.94);color:#181106;
-    display:flex;align-items:center;justify-content:center;font-size:24px;padding-left:4px;
-    box-shadow:0 8px 30px rgba(0,0,0,.5);
-  }
-  .video-facade .vf-cap{
-    position:absolute;left:0;right:0;bottom:0;padding:30px 16px 12px;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;
-    color:rgba(236,226,203,.94);background:linear-gradient(180deg,transparent,rgba(4,8,7,.85));
-  }
+  /* ---------- hidden audio embed (inside the player bar) ---------- */
+  .yt-hidden{position:absolute;left:10px;bottom:10px;width:4px;height:4px;opacity:.01;pointer-events:none;border:0}
   .p-spotify{
     color:var(--ink-dim);text-decoration:none;font-size:13px;letter-spacing:.08em;flex:none;
     padding:10px 6px;min-height:44px;display:inline-flex;align-items:center;
@@ -466,8 +402,6 @@
   .song-view.swap .song-body{animation-delay:.06s}
   @keyframes swapIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
   .map-panel.open{animation:swapIn .5s ease both}
-  .video-facade iframe{width:100%;height:100%;display:block;border:0}
-  .video-facade.playing{cursor:default}
 
   /* ---------- embedded spotify players ---------- */
   .spotify-block{margin-top:26px;border:1px solid var(--line-soft);border-radius:20px;background:var(--panel);padding:26px 28px}
@@ -557,7 +491,7 @@
     <div class="sec-head">
       <span class="num">El elemento central</span>
       <h2>Un árbol, un mapa, una doble hélice</h2>
-      <p>Doce composiciones crecen desde un mismo tronco. Cada nodo es una canción; cada raíz, una conexión con las demás. Toca un nodo para entrar en su mundo y ver su vídeo oficial.</p>
+      <p>Doce composiciones crecen desde un mismo tronco. Cada nodo es una canción; cada raíz, una conexión con las demás. Toca un nodo para entrar en su mundo y escuchar su música.</p>
       <div class="rule"></div>
     </div>
     <div class="universe-stage">
@@ -633,7 +567,7 @@
       <div class="rule"></div>
     </div>
     <div class="studio-grid">
-      <figure class="sg-a"><img src="assets/estudio1.jpg" alt="Vista general del estudio de Javier Rubio: mesa de producción con dos pantallas de DAW, guitarras, congas, handpan, cajón y acordeón" /><figcaption>El estudio: el lugar donde las raíces se convierten en sonido.</figcaption></figure>
+      <figure class="sg-a"><img src="assets/estudio1.jpg" alt="Vista cenital del estudio de Javier Rubio: el autor, de espaldas, ante la mesa con las pantallas del DAW, rodeado de handpan, acordeón, cajón, congas, guitarras y flautas" /><figcaption>El estudio: el lugar donde las raíces se convierten en sonido.</figcaption></figure>
       <figure class="sg-b"><img src="assets/estudio2.jpg" alt="Javier Rubio reclinado en su estudio con auriculares, escuchando una mezcla frente a las pantallas del DAW" /><figcaption>La escucha: cada composición se revisa hasta que respira.</figcaption></figure>
       <figure class="sg-c"><img src="assets/estudio3.jpg" alt="Javier Rubio trabajando con el ratón y el teclado frente a dos pantallas con sesiones de audio multipista" /><figcaption>La producción: capas de audio, edición y mezcla en el DAW.</figcaption></figure>
       <figure class="sg-d"><img src="assets/estudio4.jpg" alt="Primer plano de Javier Rubio sonriendo mientras trabaja en su estudio, con un monitor de estudio y la sesión del DAW al fondo" /><figcaption>Javier Rubio, autor de Ancestralia.</figcaption></figure>
@@ -673,38 +607,9 @@
   <p>La música suena desde YouTube: vídeos del <a href="https://youtube.com/@inedit-music" target="_blank" rel="noopener">canal del autor</a> cuando el tema tiene vídeo propio, y de la <a href="https://youtube.com/playlist?list=OLAK5uy_mGTU3evU5lqQ050Twn6yLC7jr8lElFS0s&si=wINXPa1GmM-w7eB3" target="_blank" rel="noopener">lista oficial del álbum</a> en los demás casos. El álbum completo, también en <a href="https://open.spotify.com/album/0h66VYMTglXQpvGmgoTW8b" target="_blank" rel="noopener">Spotify</a>.</p>
 </footer>
 
-<!-- ============ VIDEO DOCK ============ -->
-<div class="vdock" id="vdock" aria-label="Vídeo oficial de YouTube">
-  <div class="vdock-head">
-    <span id="vdockTitle">Vídeo · Ancestralia</span>
-    <span class="vdock-btns">
-      <button type="button" id="vdockMini" aria-label="Reducir o ampliar el vídeo">–</button>
-      <button type="button" id="vdockClose" aria-label="Cerrar el vídeo">✕</button>
-    </span>
-  </div>
-  <div class="vdock-frame">
-    <iframe id="ytFrame" title="Vídeo oficial en YouTube" src="about:blank" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowfullscreen></iframe>
-    <button type="button" class="dock-poster" id="dockPoster" aria-label="Reanudar la reproducción" hidden>
-      <img id="dockPosterImg" src="assets/thumb-1.jpg" alt="" />
-      <span class="dp-play" aria-hidden="true">▶</span>
-      <span class="dp-cap">En pausa · Toca para seguir escuchando</span>
-    </button>
-    <div class="dock-fail" id="dockFail" hidden>
-      <p>Este visor no ha podido cargar el vídeo de YouTube dentro de la página.</p>
-      <div class="dock-fail-btns">
-        <button type="button" class="btn btn-ghost" id="dockRetry">Reintentar</button>
-        <a class="btn btn-ghost" id="dockFailLink" href="https://www.youtube.com/watch?v=hdOFMyl3OMc" target="_blank" rel="noopener">Verlo en YouTube</a>
-      </div>
-    </div>
-  </div>
-  <div class="vdock-alt">
-    <span>Si este visor no carga el vídeo,</span>
-    <a id="vdockAltLink" href="https://www.youtube.com/watch?v=hdOFMyl3OMc" target="_blank" rel="noopener">ábrelo en YouTube</a>
-  </div>
-</div>
-
 <!-- ============ PLAYER ============ -->
 <div class="player" role="region" aria-label="Reproductor de Ancestralia">
+  <iframe id="ytAudio" class="yt-hidden" title="Audio de Ancestralia (YouTube)" src="about:blank" tabindex="-1" aria-hidden="true" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; encrypted-media"></iframe>
   <img class="cover" id="pCover" src="assets/portada.jpg" alt="Portada de Ancestralia" title="Ir a la ficha de la canción" />
   <div class="now">
     <b id="pTitle">Ancestralia</b>
@@ -721,7 +626,6 @@
     <div class="bar" id="pBar" role="slider" aria-label="Progreso de la canción" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0"><div class="track"><div class="fill" id="pFill"></div></div></div>
     <time id="tDur">0:00</time>
   </div>
-  <button class="p-btn" id="pVideoBtn" type="button" aria-label="Mostrar u ocultar el vídeo" title="Vídeo"><svg viewBox="0 0 24 24"><path d="M21 6.5l-4 2v-2c0-.6-.4-1-1-1H4c-.6 0-1 .4-1 1v11c0 .6.4 1 1 1h12c.6 0 1-.4 1-1v-2l4 2v-11zM10 15.5v-7l6 3.5-6 3.5z"/></svg></button>
   <a class="p-spotify" href="#spotifyUnico" title="Abrir el reproductor de Spotify integrado">Spotify</a>
   <div class="p-vol">
     <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg>
@@ -737,8 +641,10 @@ var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 var SONGS = [
  { yt:"hdOFMyl3OMc", vsrc:"lista", title:"Ancestralia", phase:"I · El origen", phaseName:"Ancestralia — el origen", territory:"El umbral de todos los territorios",
    color:"#e8c987", glyph:"A", root:196.00, scale:[0,2,4,7,9], tempo:3400, dur:214, wave:"triangle",
-   desc:["La puerta de entrada al álbum y a esta instalación. «Ancestralia» nombra el territorio interior del que parte todo el viaje: la certeza de que no somos un comienzo, sino una continuación.",
-         "Su melodía funciona como un tronco: de ella se ramifican motivos que reaparecerán, transformados, a lo largo de las once composiciones siguientes."],
+   desc:["La puerta de entrada al álbum y a esta instalación: una declaración de intenciones. «Ancestralia» es la llave del disco —su manual de iniciación— y nombra el territorio interior del que parte todo el viaje: la certeza de que no somos un comienzo, sino una continuación.",
+         "Algo de tronco también tiene: de sus motivos y paisajes nacen ecos que atraviesan el álbum, y el tema final, «Nova Ancestralia», es una evolución directa de los motivos y paisajes que aquí se definen por primera vez. El tema se abre con una serie de frases —en los diferentes idiomas de cada región— que resumen esa declaración:"],
+   versesLabel:"Las frases de apertura",
+   verses:"Escucha... dentro de ti hablan siglos.\nSomos hijos de muchas costas y de un solo mar.\nSomos la chispa distante que aún ilumina tu noche.\nEn cada gesto pequeño respira la memoria de lo que heredamos.\nHonrar a quienes fueron es reconocer el camino que nos abrieron.\nLas historias de nuestros antepasados son huellas que aún nos guían.\nAncestralia empieza cuando cierras los ojos.",
    conn:[1,3,11] },
  { yt:"YvA5iTDe8KM", vsrc:"canal", title:"Aljamía", phase:"IV · Los encuentros", phaseName:"Encuentros", territory:"España · al-Ándalus y el norte de África",
    color:"#d99a4e", glyph:"ع", root:146.83, scale:[0,1,4,5,7,8,11], tempo:2600, dur:236, wave:"sine", img:"assets/aljamia.jpg",
@@ -773,8 +679,8 @@ var SONGS = [
    conn:[2,8,5] },
  { yt:"aKugHMzE-sQ", vsrc:"lista", title:"Anaoudek", phase:"II · Las raíces", phaseName:"Raíces", territory:"Bretaña",
    color:"#7fb5a3", glyph:"B", root:185.00, scale:[0,2,3,7,9], tempo:3200, dur:209, wave:"triangle",
-   desc:["«Anaoudek» evoca los apellidos bretones que significan «el conocido», «el reconocido»: la identidad como algo que la comunidad te devuelve al nombrarte.",
-         "Desde la Bretaña de granito y niebla, la pieza pregunta qué queda de nosotros en la lengua y los nombres que heredamos de un lugar."],
+   desc:["En bretón, «anaoudek» significa literalmente «estar agradecido». Y eso es exactamente esta composición: un pequeño reconocimiento, un agradecimiento al esfuerzo y a las generaciones que nos precedieron.",
+         "Suena como una especie de plegaria hacia el cielo —en sentido figurado: hacia el sitio donde residan los nuestros—, una manera de dar las gracias desde la Bretaña a quienes abrieron el camino antes de que llegáramos nosotros."],
    conn:[8,2,3] },
  { yt:"Of0n99bVxLo", vsrc:"lista", title:"Praias de mil areias / Iroise", phase:"III · Las migraciones", phaseName:"Migraciones", territory:"Portugal · Ericeira y el mar de Iroise, Bretaña",
    color:"#4fa8c9", glyph:"P", root:196.00, scale:[0,2,4,7,11], tempo:2800, dur:251, wave:"sine",
@@ -913,7 +819,6 @@ var songView = document.getElementById("songView");
 var currentView = 0;
 function openSong(i, scroll){
   currentView = i;
-  inlineActive = false;
   var s = SONGS[i];
   nodeEls.forEach(function(n,k){ n.classList.toggle("active", k===i); });
   chipEls.forEach(function(c,k){ c.classList.toggle("active", k===i); });
@@ -925,7 +830,7 @@ function openSong(i, scroll){
       '<div class="veil" style="background:linear-gradient(200deg, transparent 58%, rgba(6,13,12,.5))"></div>'+
       '<div class="art-frame" aria-hidden="true"></div><p class="art-cap">'+s.territory+'</p>';
   var versesHtml = s.verses
-    ? '<div class="song-verses"><span class="sv-label">Los versos del autor</span><blockquote>'+
+    ? '<div class="song-verses"><span class="sv-label">'+(s.versesLabel || "Los versos del autor")+'</span><blockquote>'+
       s.verses.split("\n\n").map(function(st){
         return '<p>'+st.split("\n").join("<br>")+'</p>';
       }).join("")+'</blockquote></div>'
@@ -933,14 +838,8 @@ function openSong(i, scroll){
   var conn = s.conn.map(function(j){
     return '<button type="button" class="conn-chip" data-conn="'+j+'"><i style="color:'+SONGS[j].color+';background:'+SONGS[j].color+'"></i>'+SONGS[j].title+'</button>';
   }).join("");
-  var facadeHtml =
-      '<div class="video-facade" id="svFacade" role="button" tabindex="0" aria-label="Reproducir el vídeo oficial de '+s.title+'">'+
-        '<img src="assets/thumb-'+(i+1)+'.jpg" alt="Miniatura del vídeo oficial de «'+s.title+'» en YouTube" />'+
-        '<span class="vf-play" aria-hidden="true">▶</span>'+
-        '<span class="vf-cap">Vídeo oficial · '+(s.vsrc==="canal" ? "Canal del autor — Inedit-Music" : "Lista oficial del álbum en YouTube")+'</span>'+
-      '</div>';
   songView.innerHTML =
-    '<div class="song-left"><div class="song-art">'+art+'</div>'+facadeHtml+'</div>'+
+    '<div class="song-left"><div class="song-art">'+art+'</div></div>'+
     '<div class="song-body">'+
       '<span class="phase">'+s.phase+'</span>'+
       '<h3>'+s.title+'</h3>'+
@@ -959,42 +858,13 @@ function openSong(i, scroll){
         '<button type="button" class="btn btn-ghost" id="svPrev">← Anterior</button>'+
         '<button type="button" class="btn btn-ghost" id="svNext">Siguiente →</button>'+
       '</div>'+
-      '<p class="listen-note" style="margin-top:16px"><b>La música es la real.</b> Pulsa la miniatura para ver y oír el vídeo oficial aquí mismo, sin salir de la página. Con «Escuchar esta composición», la música te acompaña desde el reproductor inferior mientras sigues recorriendo la instalación. Cada tema suena con el vídeo del canal del autor (Inedit-Music) cuando tiene vídeo propio, y con el de la lista oficial del álbum en los demás casos. Y al final del recorrido, en Nova Ancestralia, tienes el álbum entero en el reproductor de Spotify, también sin salir de la página.</p>'+
+      '<p class="listen-note" style="margin-top:16px"><b>La música es la real.</b> Con «Escuchar esta composición», el tema suena solo en audio desde el reproductor inferior —sin ningún vídeo sobre la página— y te acompaña mientras sigues recorriendo la instalación. Cada tema suena con el vídeo del canal del autor (Inedit-Music) cuando tiene vídeo propio, y con el de la lista oficial del álbum en los demás casos; si quieres ver el vídeo oficial, ábrelo con «Ver en YouTube». Y al final del recorrido, en Nova Ancestralia, tienes el álbum entero en el reproductor de Spotify, también sin salir de la página.</p>'+
     '</div>';
   songView.querySelectorAll("[data-conn]").forEach(function(ch){
     ch.addEventListener("click", function(){ openSong(parseInt(ch.getAttribute("data-conn"),10), false);
       document.getElementById("cancion").scrollIntoView({behavior: reduced?"auto":"smooth"}); });
   });
   document.getElementById("svPlay").addEventListener("click", function(){ playTrack(i, true); });
-  var facade = document.getElementById("svFacade");
-  function loadInline(){
-    if(inlineActive) return;
-    inlineActive = true;
-    stopDockAudio();
-    facade.classList.add("playing");
-    facade.removeAttribute("role");
-    facade.removeAttribute("tabindex");
-    var ifr = document.createElement("iframe");
-    ifr.title = "Vídeo oficial de «"+s.title+"» en YouTube";
-    ifr.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
-    ifr.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen");
-    ifr.setAttribute("allowfullscreen", "");
-    var loaded = false;
-    ifr.addEventListener("load", function(){ loaded = true; });
-    facade.innerHTML = "";
-    facade.appendChild(ifr);
-    ifr.src = embedURL(s.yt, true);
-    /* Some in-app viewers (e.g. WhatsApp's internal WebView) refuse to
-       load YouTube inside iframes and paint their own error page. If
-       the embed never reports a load, swap that dead frame for an
-       honest panel with the way out, instead of leaving the error. */
-    setTimeout(function(){
-      if(loaded || !facade.isConnected) return;
-      facade.innerHTML = '<div class="vf-fallback"><p>Este visor no ha podido cargar el vídeo de YouTube dentro de la página.</p><a class="btn btn-ghost" href="https://www.youtube.com/watch?v='+s.yt+'" target="_blank" rel="noopener">Verlo en YouTube</a></div>';
-    }, 7000);
-  }
-  facade.addEventListener("click", loadInline);
-  facade.addEventListener("keydown", function(ev){ if(ev.key==="Enter"||ev.key===" "){ ev.preventDefault(); loadInline(); } });
   document.getElementById("svPrev").addEventListener("click", function(){ openSong((i+11)%12, false); });
   document.getElementById("svNext").addEventListener("click", function(){ openSong((i+1)%12, false); });
   songView.classList.remove("swap");
@@ -1069,23 +939,28 @@ function openPlace(idx){
   mapPanel.scrollIntoView({behavior: reduced?"auto":"smooth", block:"nearest"});
 }
 
-/* ================= YOUTUBE PLAYER (persistent) =================
+/* ================= YOUTUBE AUDIO (persistent, in the bar) =================
    Priority per the author: if a song has a video on his own channel
    (Inedit-Music), that video is used; otherwise, the video from the
-   official album playlist (Javier Rubio - Topic). Each SONGS entry
-   carries its chosen video in .yt and its source in .vsrc. */
+   official album playlist. Each SONGS entry carries its chosen video
+   in .yt and its source in .vsrc.
+   Playback is AUDIO ONLY and lives entirely inside the bottom bar:
+   a single small hidden embed plays the sound while the visitor
+   keeps browsing — no video surface ever opens over the page, and
+   nothing in the bar can navigate or reload the page. Every (re)load
+   of the embed happens synchronously inside the visitor's tap, the
+   one pattern browsers honour for starting sound, and the bar trusts
+   that gesture instead of waiting for confirmation messages that
+   restricted in-app viewers drop (the old dead play). Pausing
+   unloads the embed and keeps the position; resuming restarts it
+   there, again inside the tap. */
 var playing = false, cur = 0, pollID = null;
-var pMode = "idle"; /* idle | embed */
-var embLoaded = false, embElapsed = 0, embLast = 0, inlineActive = false;
-var embConfirmed = false, embPendingPlay = false, embToken = 0, embWatch = null;
+var embLoaded = false, embElapsed = 0, embLast = 0;
+var embConfirmed = false, embToken = 0, embWatch = null;
 var pTitle=document.getElementById("pTitle"), pPhase=document.getElementById("pPhase"),
     pFill=document.getElementById("pFill"), tCur=document.getElementById("tCur"), tDur=document.getElementById("tDur"),
     pPlayIcon=document.getElementById("pPlayIcon"), eq=document.getElementById("eq"), pBar=document.getElementById("pBar");
-var dock = document.getElementById("vdock"), dockTitle = document.getElementById("vdockTitle");
-var frame = document.getElementById("ytFrame");
-var dockPoster = document.getElementById("dockPoster"), dockPosterImg = document.getElementById("dockPosterImg");
-var dockAltLink = document.getElementById("vdockAltLink");
-var dockFail = document.getElementById("dockFail"), dockFailLink = document.getElementById("dockFailLink");
+var frame = document.getElementById("ytAudio");
 var pVolEl = document.getElementById("pVol");
 
 function fmt(sec){ sec=Math.max(0,Math.floor(sec||0)); return Math.floor(sec/60)+":"+("0"+(sec%60)).slice(-2); }
@@ -1094,106 +969,86 @@ function setPlayUI(){
   eq.classList.toggle("on", playing);
   nodeEls.forEach(function(n,k){ n.classList.toggle("playing", playing && k===cur); });
 }
-function openDock(){ dock.classList.add("open"); dock.classList.remove("mini"); }
 function embedURL(id, autoplay, startAt){
   var u = "https://www.youtube.com/embed/"+id+"?autoplay="+(autoplay?1:0)+"&rel=0&playsinline=1&modestbranding=1&enablejsapi=1";
   if(startAt && startAt > 2) u += "&start="+Math.floor(startAt);
   return u;
 }
-/* Playback uses plain embedded YouTube players only: the standard
-   <iframe> embed, whose src is assigned synchronously inside the
-   visitor's own tap — the one pattern every browser honours for
-   starting playback with sound. The IFrame API player used before
-   silently never started inside the installation's sandboxed frame:
-   the poster loaded, but its postMessage play commands were dropped
-   and the state machine waited forever in "loading", leaving a dead
-   play button. So play, pause, track changes and seeking are all done
-   by (re)loading the embed. Pausing unloads it and keeps a poster
-   with the position; resuming restarts the embed at that position. */
 function embPosition(){
-  return (playing && embConfirmed) ? embElapsed + (Date.now() - embLast)/1000 : embElapsed;
+  return playing ? embElapsed + (Date.now() - embLast)/1000 : embElapsed;
 }
 function armWatchdog(){
   if(embWatch) clearTimeout(embWatch);
   var token = ++embToken;
   embWatch = setTimeout(function(){
     if(token !== embToken || embConfirmed || !embLoaded) return;
-    /* The embed never confirmed it is alive: restricted in-app viewers
-       refuse YouTube iframes and paint their own error page instead.
-       Stop pretending, unload the dead frame and offer the way out. */
+    /* The embed never confirmed it is alive: restricted in-app
+       viewers refuse YouTube iframes altogether. Stop pretending,
+       unload the dead frame and say so inside the bar itself. */
     frame.src = "about:blank";
-    frame.style.display = "none";
-    embLoaded = false; embPendingPlay = false; playing = false;
-    dockFailLink.href = "https://www.youtube.com/watch?v=" + SONGS[cur].yt;
-    dockFail.hidden = false;
+    embLoaded = false; playing = false;
+    pPhase.textContent = "Este visor no carga el audio · En la ficha, «Ver en YouTube»";
     setPlayUI();
-  }, 8000);
+  }, 9000);
 }
 function startEmbed(i, autoplay, startAt){
   cur = i;
-  pMode = "embed"; embLoaded = true;
+  embLoaded = true; embConfirmed = false;
   embElapsed = startAt || 0; embLast = Date.now();
-  /* Playback is not claimed until the embed itself confirms it is
-     alive (its onReady message); until then the bar stays honest. */
-  embConfirmed = false; embPendingPlay = !!autoplay; playing = false;
-  dockPoster.hidden = true;
-  dockFail.hidden = true;
-  frame.style.display = "block";
+  playing = !!autoplay;
   frame.src = embedURL(SONGS[i].yt, autoplay, startAt);
   if(!pollID) pollID = setInterval(tick, 500);
-  armWatchdog();
+  if(autoplay) armWatchdog(); else embToken++;
   setPlayUI();
 }
 function pauseEmbed(){
   embElapsed = embPosition();
   embToken++; if(embWatch) clearTimeout(embWatch);
-  embPendingPlay = false;
   frame.src = "about:blank";
-  frame.style.display = "none";
-  embLoaded = false;
-  dockPosterImg.src = "assets/thumb-"+(cur+1)+".jpg";
-  dockPoster.hidden = false;
+  embLoaded = false; embConfirmed = false;
   playing = false;
   setPlayUI();
 }
-/* The embed announces itself with an onReady postMessage once the real
-   YouTube player is running; an error page inside a restricted viewer
-   never sends it. That message is the only trusted "it is playing"
-   signal, and it also unlocks the volume commands below. */
-window.addEventListener("message", function(ev){
-  if(!frame.contentWindow || ev.source !== frame.contentWindow) return;
-  var d = ev.data;
-  if(typeof d !== "string") return;
-  if(d.indexOf('"onReady"') === -1 && d.indexOf('"infoDelivery"') === -1) return;
-  if(!embLoaded || embConfirmed) return;
-  embConfirmed = true;
-  if(embWatch) clearTimeout(embWatch);
-  if(embPendingPlay){ playing = true; embLast = Date.now(); }
-  applyVolume();
-  setPlayUI();
-});
-frame.addEventListener("load", function(){
-  if(frame.src.indexOf("youtube.com/embed") === -1) return;
-  try { frame.contentWindow.postMessage('{"event":"listening","id":"ytFrame","channel":"widget"}', "https://www.youtube.com"); } catch(e){}
-});
 function sendCmd(func, args){
   if(!frame.contentWindow) return;
   try { frame.contentWindow.postMessage(JSON.stringify({event:"command", func:func, args:args || []}), "https://www.youtube.com"); } catch(e){}
 }
 function applyVolume(){
   var v = parseInt(pVolEl.value, 10);
-  if(isNaN(v)) return;
+  if(isNaN(v) || !embConfirmed) return;
   if(v <= 0) sendCmd("mute");
   else { sendCmd("unMute"); sendCmd("setVolume", [v]); }
 }
 pVolEl.addEventListener("input", applyVolume);
-function stopDockAudio(){
-  if(pMode === "embed" && embLoaded) pauseEmbed();
-  else if(playing){ playing = false; setPlayUI(); }
-}
-
+/* The embed announces itself once the real YouTube player is
+   running; an error page inside a restricted viewer never does.
+   Its state messages also keep the bar honest: they correct the
+   position clock and advance the album when a track truly ends. */
+window.addEventListener("message", function(ev){
+  if(!frame.contentWindow || ev.source !== frame.contentWindow) return;
+  if(typeof ev.data !== "string") return;
+  var d; try { d = JSON.parse(ev.data); } catch(e){ return; }
+  if(d.event === "onReady"){
+    embConfirmed = true;
+    if(embWatch) clearTimeout(embWatch);
+    applyVolume();
+    return;
+  }
+  if(d.event === "infoDelivery" && d.info && embLoaded){
+    if(typeof d.info.currentTime === "number"){
+      embElapsed = d.info.currentTime; embLast = Date.now();
+    }
+    if(d.info.playerState === 0){ playTrack((cur+1)%12, true); }
+    else if(d.info.playerState === 1 && !playing){ playing = true; embLast = Date.now(); setPlayUI(); }
+    else if(d.info.playerState === 2 && playing){ playing = false; setPlayUI(); }
+  }
+});
+frame.addEventListener("load", function(){
+  if(frame.src.indexOf("youtube.com/embed") === -1) return;
+  try { frame.contentWindow.postMessage('{"event":"listening","id":"ytAudio","channel":"widget"}', "https://www.youtube.com"); } catch(e){}
+});
 function tick(){
-  if(pMode !== "embed") return;
+  if(!embLoaded) return;
   var dur = SONGS[cur].dur || 0;
   if(dur <= 0) return;
   var pos = embPosition();
@@ -1201,38 +1056,31 @@ function tick(){
   pFill.style.width = (t/dur*100)+"%";
   pBar.setAttribute("aria-valuenow", Math.round(t/dur*100));
   tCur.textContent = fmt(t); tDur.textContent = fmt(dur);
-  if(playing && embConfirmed && pos >= dur) playTrack((cur+1)%12, true);
+  if(playing && pos >= dur + 1.5) playTrack((cur+1)%12, true);
 }
 function playTrack(i, autoplay){
-  var changed = i !== cur;
   cur = i;
   var s = SONGS[i];
   pTitle.textContent = s.title;
   pPhase.textContent = (i+1) + "/12 · " + s.phase.split("·")[1].trim();
-  dockTitle.textContent = "Vídeo · " + s.title + (s.vsrc==="canal" ? " · Canal del autor" : " · Lista oficial del álbum");
-  dockAltLink.href = "https://www.youtube.com/watch?v=" + s.yt;
-  dockFailLink.href = "https://www.youtube.com/watch?v=" + s.yt;
   document.documentElement.style.setProperty("--accent", s.color);
-  pFill.style.width = "0%"; tCur.textContent = "0:00"; tDur.textContent = "0:00";
-  if(inlineActive || currentView !== i) openSong(i, false);
+  pFill.style.width = "0%"; tCur.textContent = "0:00"; tDur.textContent = fmt(s.dur);
+  if(currentView !== i) openSong(i, false);
   nodeEls.forEach(function(n,k){ n.classList.toggle("active", k===i); });
   chipEls.forEach(function(c,k){ c.classList.toggle("active", k===i); });
-  if(autoplay){
-    startEmbed(i, true, 0);
-    openDock();
-  } else if(changed){
-    embElapsed = 0;
-    if(embLoaded) startEmbed(i, false, 0);
-    else if(!dockPoster.hidden) dockPosterImg.src = "assets/thumb-"+(i+1)+".jpg";
-  }
+  if(autoplay) startEmbed(i, true, 0);
+  else if(embLoaded) startEmbed(i, false, 0);
+  else { embElapsed = 0; embLast = Date.now(); }
   setPlayUI();
 }
 function togglePlay(){
-  if(playing || embPendingPlay){ pauseEmbed(); return; }
+  if(playing){ pauseEmbed(); return; }
+  /* If the visitor is reading another song's ficha, the bar plays
+     that song — the one its title announces — not a stale track. */
+  if(currentView !== cur){ playTrack(currentView, true); return; }
   /* Start (or resume) synchronously inside the tap, so the browser
      grants the embed autoplay with sound. */
   startEmbed(cur, true, embElapsed);
-  openDock();
 }
 document.getElementById("pPlay").addEventListener("click", togglePlay);
 document.getElementById("pPrev").addEventListener("click", function(){ playTrack((cur+11)%12, playing); });
@@ -1240,18 +1088,8 @@ document.getElementById("pNext").addEventListener("click", function(){ playTrack
 document.getElementById("heroPlay").addEventListener("click", function(){ playTrack(0, true); });
 document.getElementById("novaPlay").addEventListener("click", function(){ playTrack(11, true); });
 document.getElementById("pCover").addEventListener("click", function(){ openSong(cur, true); });
-dockPoster.addEventListener("click", function(){ startEmbed(cur, true, embElapsed); });
-document.getElementById("dockRetry").addEventListener("click", function(){ startEmbed(cur, true, embElapsed); openDock(); });
-document.getElementById("pVideoBtn").addEventListener("click", function(){
-  if(dock.classList.contains("open")) dock.classList.remove("open");
-  else { openDock(); if(pMode === "idle") startEmbed(cur, false, 0); }
-});
-document.getElementById("vdockMini").addEventListener("click", function(){ dock.classList.toggle("mini"); });
-document.getElementById("vdockClose").addEventListener("click", function(){
-  dock.classList.remove("open"); stopDockAudio();
-});
 function seekTo(clientX){
-  if(pMode !== "embed") return;
+  if(!embLoaded) return;
   var r = pBar.getBoundingClientRect();
   var ratio = Math.min(1, Math.max(0, (clientX - r.left)/r.width));
   var d = SONGS[cur].dur || 0;
@@ -1259,7 +1097,7 @@ function seekTo(clientX){
 }
 pBar.addEventListener("click", function(ev){ seekTo(ev.clientX); });
 pBar.addEventListener("keydown", function(ev){
-  if(pMode !== "embed") return;
+  if(!embLoaded) return;
   var d = SONGS[cur].dur || 0;
   if(d <= 0) return;
   if(ev.key==="ArrowRight") startEmbed(cur, playing, Math.min(d, embPosition()+10));
