@@ -67,17 +67,11 @@
     padding:10px 12px;border-radius:99px;min-height:44px;display:inline-flex;align-items:center;
   }
   nav.main a:hover{color:var(--gold-bright);background:rgba(201,168,106,.08)}
-  .motion-btn{
-    border:1px solid var(--line);border-radius:99px;padding:8px 14px;font-size:12.5px;
-    letter-spacing:.1em;text-transform:uppercase;color:var(--ink-dim);white-space:nowrap;
-  }
-  .motion-btn:hover{color:var(--gold-bright);border-color:var(--gold)}
   @media (max-width:760px){
     nav.main{display:none} .brand small{display:none}
     .topbar{padding:8px 12px}
     .brand img{width:36px;height:36px}
     .brand span{font-size:16.5px;letter-spacing:.14em}
-    .motion-btn{font-size:10.5px;padding:7px 10px;letter-spacing:.06em}
   }
 
   /* ---------- hero ---------- */
@@ -108,7 +102,6 @@
   @keyframes spinRev{to{transform:rotate(-360deg)}}
   .hero-emblem{
     position:relative;z-index:2;width:93%;height:auto;
-    mix-blend-mode:lighten;
     animation:emblemFloat 9s ease-in-out infinite;
   }
   @keyframes emblemFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
@@ -519,7 +512,6 @@
     <a href="#nova">Nova</a>
     <a href="#contacto">Contacto</a>
   </nav>
-  <button class="motion-btn" id="motionBtn" type="button" aria-pressed="false">Calmar movimiento</button>
 </header>
 
 <!-- ============ ENTRADA ============ -->
@@ -529,7 +521,7 @@
     <div class="emblem-glow" aria-hidden="true"></div>
     <div class="emblem-ring r1" aria-hidden="true"></div>
     <div class="emblem-ring r2" aria-hidden="true"></div>
-    <img class="hero-emblem" src="assets/emblema.jpg" alt="Emblema oficial de Ancestralia: el árbol de la vida cuyo tronco es una doble hélice de ADN, integrado sobre el fondo oscuro de la instalación" />
+    <img class="hero-emblem" src="assets/emblema-hero.webp" alt="Emblema oficial de Ancestralia: el árbol de la vida cuyo tronco es una doble hélice de ADN, integrado sobre el fondo oscuro de la instalación" />
   </div>
   <h1>Ancestra<span class="gold">lia</span></h1>
   <p class="author">Un álbum de Javier Rubio</p>
@@ -1286,17 +1278,7 @@ if(!reduced){
   heroP = makeParticles(document.getElementById("stars"), 55, 130, true);
   uniP = makeParticles(document.getElementById("uniCanvas"), 40, 120);
 }
-var motionBtn = document.getElementById("motionBtn");
-function setMotion(on){
-  motionOn = on;
-  document.body.classList.toggle("reduced-motion", !on);
-  motionBtn.textContent = on ? "Calmar movimiento" : "Reanudar movimiento";
-  motionBtn.setAttribute("aria-pressed", String(!on));
-  if(heroP){ on ? heroP.restart() : heroP.stop(); }
-  if(uniP){ on ? uniP.restart() : uniP.stop(); }
-}
-if(reduced){ document.body.classList.add("reduced-motion"); motionBtn.textContent="Reanudar movimiento"; motionOn=false; }
-motionBtn.addEventListener("click", function(){ setMotion(!motionOn); });
+if(reduced){ document.body.classList.add("reduced-motion"); motionOn=false; }
 
 /* ================= LIGHT PULSES along roots & routes ================= */
 var pulseSets = [];
