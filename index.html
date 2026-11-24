@@ -67,11 +67,27 @@
     padding:10px 12px;border-radius:99px;min-height:44px;display:inline-flex;align-items:center;
   }
   nav.main a:hover{color:var(--gold-bright);background:rgba(201,168,106,.08)}
+  .menu-btn{display:none;width:44px;height:44px;border-radius:10px;align-items:center;justify-content:center;color:var(--ink-dim);flex:none}
+  .menu-btn:hover{color:var(--gold-bright);background:rgba(201,168,106,.08)}
+  .menu-btn svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
+  nav.mobile{display:none}
   @media (max-width:760px){
     nav.main{display:none} .brand small{display:none}
     .topbar{padding:8px 12px}
     .brand img{width:36px;height:36px}
     .brand span{font-size:16.5px;letter-spacing:.14em}
+    .menu-btn{display:inline-flex}
+    nav.mobile{
+      position:fixed;top:56px;right:10px;z-index:59;min-width:216px;
+      background:rgba(10,21,18,.98);border:1px solid var(--line);border-radius:14px;
+      box-shadow:0 18px 40px rgba(0,0,0,.5);padding:8px;flex-direction:column;
+    }
+    nav.mobile.open{display:flex}
+    nav.mobile a{
+      color:var(--ink-dim);text-decoration:none;font-size:13.5px;letter-spacing:.12em;text-transform:uppercase;
+      padding:12px 14px;border-radius:9px;min-height:44px;display:flex;align-items:center;
+    }
+    nav.mobile a:hover,nav.mobile a:active{color:var(--gold-bright);background:rgba(201,168,106,.08)}
   }
 
   /* ---------- hero ---------- */
@@ -113,9 +129,8 @@
   .hero .hero-scroll{animation:heroIn 1.1s .85s cubic-bezier(.2,.7,.2,1) both}
   .hero h1{
     margin-top:34px;font-size:clamp(44px,8.5vw,96px);letter-spacing:.14em;text-transform:uppercase;font-weight:500;
-    color:var(--ink);
+    color:var(--gold-bright);
   }
-  .hero h1 .gold{color:var(--gold-bright)}
   .hero .author{margin-top:6px;font-size:14px;letter-spacing:.34em;text-transform:uppercase;color:var(--ink-dim)}
   .hero .lede{max-width:620px;margin:26px auto 0;font-size:18px;color:var(--ink-dim);font-weight:300}
   .hero .lede em{color:var(--ink);font-family:"Cormorant Garamond",serif;font-size:21px}
@@ -512,6 +527,18 @@
     <a href="#nova">El álbum completo</a>
     <a href="#contacto">Contacto</a>
   </nav>
+  <button class="menu-btn" id="menuBtn" type="button" aria-label="Abrir el menú de secciones" aria-expanded="false" aria-controls="mobileNav">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+  </button>
+  <nav class="mobile" id="mobileNav" aria-label="Secciones">
+    <a href="#universo">Universo</a>
+    <a href="#cancion">Canciones</a>
+    <a href="#mapa">Mapa</a>
+    <a href="#historia">Historia</a>
+    <a href="#proceso">Proceso</a>
+    <a href="#nova">El álbum completo</a>
+    <a href="#contacto">Contacto</a>
+  </nav>
 </header>
 
 <!-- ============ ENTRADA ============ -->
@@ -523,7 +550,7 @@
     <div class="emblem-ring r2" aria-hidden="true"></div>
     <img class="hero-emblem" src="assets/emblema-hero.webp" alt="Emblema oficial de Ancestralia: el árbol de la vida cuyo tronco es una doble hélice de ADN, integrado sobre el fondo oscuro de la instalación" />
   </div>
-  <h1>Ancestra<span class="gold">lia</span></h1>
+  <h1>Ancestralia</h1>
   <p class="author">Un álbum de Javier Rubio</p>
   <p class="lede">Ninguno de nosotros es un punto de partida aislado. Somos el resultado de innumerables historias, generaciones, desplazamientos y encuentros. <em>Esto no es la página de un disco: es un lugar al que se entra.</em></p>
   <div class="hero-cta">
@@ -1430,6 +1457,34 @@ if(!location.hash){
   try{ window.scrollTo({top:0, left:0, behavior:"instant"}); }
   catch(e){ window.scrollTo(0,0); }
 }
+})();
+</script>
+<script>
+(function(){
+  "use strict";
+  var btn = document.getElementById("menuBtn");
+  var nav = document.getElementById("mobileNav");
+  if(!btn || !nav) return;
+  function closeMenu(){
+    nav.classList.remove("open");
+    btn.setAttribute("aria-expanded","false");
+    btn.setAttribute("aria-label","Abrir el menú de secciones");
+  }
+  btn.addEventListener("click", function(e){
+    e.stopPropagation();
+    var open = nav.classList.toggle("open");
+    btn.setAttribute("aria-expanded", open ? "true" : "false");
+    btn.setAttribute("aria-label", open ? "Cerrar el menú de secciones" : "Abrir el menú de secciones");
+  });
+  nav.addEventListener("click", function(e){
+    if(e.target && e.target.closest && e.target.closest("a")) closeMenu();
+  });
+  document.addEventListener("click", function(e){
+    if(nav.classList.contains("open") && !nav.contains(e.target)) closeMenu();
+  });
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape") closeMenu();
+  });
 })();
 </script>
 </body>
