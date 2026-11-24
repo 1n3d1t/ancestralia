@@ -715,6 +715,10 @@
 <script>
 (function(){
 "use strict";
+/* Never let the browser restore a previous scroll position: the
+   page always opens at the top, on the hero. Menu and in-page
+   links clicked afterwards still navigate normally. */
+if("scrollRestoration" in history){ try{ history.scrollRestoration = "manual"; }catch(e){} }
 var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 /* ================= DATA ================= */
@@ -1042,7 +1046,7 @@ var placeEls = [];
     mapSvg.appendChild(g); placeEls.push(g);
   });
 })();
-function openPlace(idx){
+function openPlace(idx, scroll){
   var p = PLACES[idx];
   placeEls.forEach(function(g,k){ g.classList.toggle("active", k===idx); });
   var chips = p.songs.map(function(j){
@@ -1053,7 +1057,9 @@ function openPlace(idx){
   mapPanel.querySelectorAll("[data-song]").forEach(function(ch){
     ch.addEventListener("click", function(){ openSong(parseInt(ch.getAttribute("data-song"),10), true); });
   });
-  mapPanel.scrollIntoView({behavior: reduced?"auto":"smooth", block:"nearest"});
+  /* Only scroll the panel into view on a real visitor interaction;
+     the initial call at page load must never move the page. */
+  if(scroll !== false) mapPanel.scrollIntoView({behavior: reduced?"auto":"smooth", block:"nearest"});
 }
 
 /* ================= YOUTUBE AUDIO (persistent, in the bar) =================
@@ -1415,10 +1421,15 @@ if(!reduced) requestAnimationFrame(pulseLoop);
   });
 })();
 
-/* init */
+/* init — paint the initial state only; nothing here may scroll.
+   The page opens at the top, on the hero with the emblem. */
 openSong(0, false);
 playTrack(0, false);
-openPlace(2);
+openPlace(2, false);
+if(!location.hash){
+  try{ window.scrollTo({top:0, left:0, behavior:"instant"}); }
+  catch(e){ window.scrollTo(0,0); }
+}
 })();
 </script>
 </body>
