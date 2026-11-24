@@ -241,6 +241,23 @@
   .conn-chip:hover{border-color:var(--teal);color:var(--teal)}
   .conn-chip i{width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block}
   .song-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px;align-items:center}
+  .yt-thumb{
+    position:relative;display:block;flex:1 1 100%;max-width:360px;aspect-ratio:4/3;
+    border-radius:12px;overflow:hidden;border:1px solid var(--line);text-decoration:none;background:#0a1512;
+  }
+  .yt-thumb img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+  .yt-thumb:hover img{transform:scale(1.045)}
+  .yt-thumb .yt-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+  .yt-thumb .yt-play i{
+    width:54px;height:54px;border-radius:50%;background:rgba(6,13,12,.74);font-style:normal;
+    border:1px solid rgba(232,201,135,.65);display:flex;align-items:center;justify-content:center;color:var(--gold-bright);
+  }
+  .yt-thumb .yt-play svg{width:24px;height:24px;fill:currentColor;margin-left:2px}
+  .yt-thumb .yt-cap{
+    position:absolute;left:0;right:0;bottom:0;padding:22px 14px 10px;pointer-events:none;
+    font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#fff;
+    background:linear-gradient(180deg,transparent,rgba(4,8,7,.88));
+  }
   .btn-play-song{background:var(--teal);color:#06231d;font-weight:700}
   .btn-play-song:hover{background:#79d8c6}
   .song-verses{
@@ -548,13 +565,7 @@
 <!-- ============ CANCIÓN ============ -->
 <section id="cancion">
   <div class="wrap">
-    <div class="sec-head">
-      <span class="num">Las doce composiciones</span>
-      <h2>Cada canción, un territorio</h2>
-      <p>Cada tema guarda su propio paisaje, su luz y su memoria. Desde aquí puedes leerlo, situarlo en el mapa y seguir sus conexiones con el resto del álbum.</p>
-      <div class="rule"></div>
-    </div>
-    <article class="song-view" id="songView" aria-live="polite"></article>
+    <article class="song-view" id="songView" aria-live="polite" style="margin-top:0"></article>
   </div>
 </section>
 
@@ -618,7 +629,6 @@
       <div class="step"><b>Las ideas musicales</b><p>Melodías y atmósferas que buscan la esencia de cada región a través de sus propios instrumentos: la guitarra, las flautas, las percusiones del mundo o el acordeón llevan la voz principal, a veces fusionando unas culturas con otras. Junto a ellos conviven el handpan, los sintetizadores y las guitarras eléctricas, que aportan el aire contemporáneo del viaje.</p></div>
       <div class="step"><b>La experimentación con IA</b><p>Generación y exploración de texturas, voces y universos visuales con inteligencia artificial, seleccionados y dirigidos criterio a criterio por el autor.</p></div>
       <div class="step"><b>La producción en el DAW</b><p>Grabación, edición, mezcla y máster en la estación de trabajo digital: el punto donde lo orgánico y lo tecnológico terminan de fundirse.</p></div>
-      <div class="step"><b>Los universos visuales</b><p>Cada canción desarrolla su propia identidad visual —como la ilustración de «Aljamía»— para que el álbum pueda también contemplarse, no solo escucharse.</p></div>
     </div>
   </div>
 </section>
@@ -627,8 +637,6 @@
 <section id="nova">
   <div class="wrap">
     <img class="cover" src="assets/portada.jpg" alt="Portada oficial del álbum Ancestralia: medallón circular con el árbol de la vida, la doble hélice de ADN y los doce títulos alrededor" />
-    <h2>Nova Ancestralia</h2>
-    <p>El recorrido termina donde vuelve a empezar. Las raíces, transformadas, se proyectan hacia el horizonte: el pasado no desaparece, continúa en quien lo escucha ahora.</p>
     <p class="final-line">Todos somos consecuencia de historias anteriores. Algo permanece, y continúa transmitiéndose.</p>
     <div class="hero-cta">
       <button class="btn btn-solid" id="novaPlay" type="button">Escuchar Nova Ancestralia</button>
@@ -949,6 +957,12 @@ function openSong(i, scroll){
   var conn = s.conn.map(function(j){
     return '<button type="button" class="conn-chip" data-conn="'+j+'"><i style="color:'+SONGS[j].color+';background:'+SONGS[j].color+'"></i>'+SONGS[j].title+'</button>';
   }).join("");
+  /* Songs with their own video on the author's channel get a
+     clickable YouTube thumbnail in place of the text link; the
+     other eight keep the plain «Ver en YouTube» link. */
+  var ytLink = s.vsrc === "canal"
+    ? '<a class="yt-thumb" href="https://www.youtube.com/watch?v='+s.yt+'" target="_blank" rel="noopener" aria-label="Ver el vídeo de «'+s.title+'» en YouTube"><img src="assets/thumb-'+(i+1)+'.jpg" alt="Miniatura del vídeo de «'+s.title+'» en el canal oficial del autor en YouTube" loading="lazy" /><span class="yt-play" aria-hidden="true"><i><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></i></span><span class="yt-cap">Ver el vídeo en YouTube</span></a>'
+    : '<a class="btn btn-ghost" href="https://www.youtube.com/watch?v='+s.yt+'" target="_blank" rel="noopener">Ver en YouTube</a>';
   songView.innerHTML =
     '<div class="song-left"><div class="song-art">'+art+'</div></div>'+
     '<div class="song-body">'+
@@ -965,7 +979,7 @@ function openSong(i, scroll){
       '<div class="song-actions">'+
         '<button type="button" class="btn btn-play-song" id="svPlay">▶ Escuchar esta composición</button>'+
         '<a class="btn btn-ghost btn-spotify" href="#spotifyUnico">Escuchar en Spotify aquí</a>'+
-        '<a class="btn btn-ghost" href="https://www.youtube.com/watch?v='+s.yt+'" target="_blank" rel="noopener">Ver en YouTube</a>'+
+        ytLink+
         '<button type="button" class="btn btn-ghost" id="svPrev">← Anterior</button>'+
         '<button type="button" class="btn btn-ghost" id="svNext">Siguiente →</button>'+
       '</div>'+
