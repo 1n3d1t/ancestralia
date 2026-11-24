@@ -169,6 +169,13 @@
   .uni-root.minor{stroke:rgba(87,199,178,.16);stroke-width:1}
   .uni-ring{fill:none;stroke:rgba(201,168,106,.10);stroke-dasharray:2 7}
   .uni-root.minor{stroke-dasharray:2 5;animation:flowDash 3.4s linear infinite}
+  .gem-halo{transform-box:fill-box;transform-origin:center;animation:gemBreath 6.5s ease-in-out infinite}
+  @keyframes gemBreath{0%,100%{opacity:.45;transform:scale(.94)}50%{opacity:.9;transform:scale(1.07)}}
+  .gem-spark{transform-box:fill-box;transform-origin:center;opacity:0;animation:gemTwinkle 5.5s ease-in-out infinite}
+  .gem-spark.s2{animation-delay:1.7s}
+  .gem-spark.s3{animation-delay:3.2s}
+  .gem-spark.s4{animation-delay:2.4s}
+  @keyframes gemTwinkle{0%,70%,100%{opacity:0;transform:scale(.45) rotate(0deg)}80%{opacity:.95;transform:scale(1) rotate(25deg)}90%{opacity:.3;transform:scale(.7) rotate(40deg)}}
   @keyframes flowDash{to{stroke-dashoffset:-70}}
   .node circle.core{transform-box:fill-box;transform-origin:center}
   .node.playing circle.core{animation:nodePulse 2.1s ease-in-out infinite}
@@ -465,6 +472,7 @@
   .reduced-motion .map-panel.open{animation:none}
   .reduced-motion .rv{opacity:1;transform:none;transition:none}
   .reduced-motion .pulse-dot{display:none}
+  .reduced-motion .gem-halo,.reduced-motion .gem-spark{display:none}
   @media (prefers-reduced-motion: reduce){
     html{scroll-behavior:auto}
     .hero-emblem,.map-route,.eq i,.emblem-ring,.emblem-glow,.uni-root.minor,
@@ -472,6 +480,7 @@
     .hero h1,.hero .author,.hero .lede,.hero .hero-cta,.hero .hero-scroll{animation:none}
     .rv{opacity:1;transform:none;transition:none}
     .pulse-dot{display:none}
+    .gem-halo,.gem-spark{display:none}
   }
 </style>
 </head>
@@ -834,28 +843,42 @@ var nodeEls = [];
     var mx=(CX+p.x)/2 + (p.y-CY)*0.18, my=(CY+p.y)/2 - (p.x-CX)*0.10;
     uniSvg.appendChild(el("path",{d:"M"+CX+" "+CY+" Q"+mx+" "+my+" "+p.x+" "+p.y, "class":"uni-root"}));
   });
-  /* centre emblem */
+  /* centre emblem: a turquoise cabochon set in an ornate gold ring, like
+     the gems of the logo — a generated image seated in the dark circle,
+     breathing under a soft pulsing turquoise glow with subtle sparkles */
+  var defs = el("defs",{});
+  var gemClip = el("clipPath",{id:"gemClip"});
+  gemClip.appendChild(el("circle",{cx:CX, cy:CY, r:32}));
+  defs.appendChild(gemClip);
+  var gemGlow = el("radialGradient",{id:"gemGlow"});
+  gemGlow.appendChild(el("stop",{offset:"0%","stop-color":"#57c7b2","stop-opacity":".55"}));
+  gemGlow.appendChild(el("stop",{offset:"55%","stop-color":"#57c7b2","stop-opacity":".18"}));
+  gemGlow.appendChild(el("stop",{offset:"100%","stop-color":"#57c7b2","stop-opacity":"0"}));
+  defs.appendChild(gemGlow);
+  uniSvg.appendChild(defs);
   var c = el("g",{});
-  c.appendChild(el("circle",{cx:CX, cy:CY, r:34, fill:"#0d1a16", stroke:"rgba(201,168,106,.6)", "stroke-width":1.4}));
-  c.appendChild(el("circle",{cx:CX, cy:CY, r:27, fill:"none", stroke:"rgba(87,199,178,.35)", "stroke-width":1, "stroke-dasharray":"3 5"}));
-  /* centre emblem: the seed of origin — a luminous turquoise seed with a
-     two-leaf sprout above and bronze rootlets below */
-  var em = el("g",{});
-  var emTitle = el("title",{}); emTitle.textContent = "La semilla del origen: brote y raíces"; em.appendChild(emTitle);
-  em.appendChild(el("circle",{cx:CX, cy:CY+1, r:14.5, fill:"rgba(87,199,178,.14)"}));
-  /* rootlets (bronze) */
-  em.appendChild(el("path",{d:"M"+CX+" "+(CY+8)+" C"+CX+" "+(CY+12)+" "+CX+" "+(CY+15)+" "+CX+" "+(CY+20), fill:"none", stroke:"#c9a86a", "stroke-width":2, "stroke-linecap":"round"}));
-  em.appendChild(el("path",{d:"M"+(CX-1)+" "+(CY+8)+" C"+(CX-4)+" "+(CY+11)+" "+(CX-7)+" "+(CY+13)+" "+(CX-11)+" "+(CY+15), fill:"none", stroke:"#c9a86a", "stroke-width":2, "stroke-linecap":"round"}));
-  em.appendChild(el("path",{d:"M"+(CX+1)+" "+(CY+8)+" C"+(CX+4)+" "+(CY+11)+" "+(CX+7)+" "+(CY+13)+" "+(CX+11)+" "+(CY+15), fill:"none", stroke:"#c9a86a", "stroke-width":2, "stroke-linecap":"round"}));
-  /* stem (turquoise) */
-  em.appendChild(el("path",{d:"M"+CX+" "+(CY-5)+" L"+CX+" "+(CY-15), fill:"none", stroke:"#57c7b2", "stroke-width":2.2, "stroke-linecap":"round"}));
-  /* two leaves */
-  em.appendChild(el("path",{d:"M"+CX+" "+(CY-15)+" C"+(CX-7)+" "+(CY-15)+" "+(CX-11)+" "+(CY-18)+" "+(CX-12)+" "+(CY-24)+" C"+(CX-6)+" "+(CY-24)+" "+(CX-2)+" "+(CY-20)+" "+CX+" "+(CY-15)+" Z", fill:"rgba(87,199,178,.30)", stroke:"#57c7b2", "stroke-width":1.8, "stroke-linejoin":"round"}));
-  em.appendChild(el("path",{d:"M"+CX+" "+(CY-15)+" C"+(CX+7)+" "+(CY-15)+" "+(CX+11)+" "+(CY-18)+" "+(CX+12)+" "+(CY-24)+" C"+(CX+6)+" "+(CY-24)+" "+(CX+2)+" "+(CY-20)+" "+CX+" "+(CY-15)+" Z", fill:"rgba(87,199,178,.30)", stroke:"#57c7b2", "stroke-width":1.8, "stroke-linejoin":"round"}));
-  /* the seed (luminous turquoise, bronze rim) */
-  em.appendChild(el("path",{d:"M"+CX+" "+(CY-7)+" C"+(CX+6)+" "+(CY-3)+" "+(CX+6)+" "+(CY+4)+" "+CX+" "+(CY+9)+" C"+(CX-6)+" "+(CY+4)+" "+(CX-6)+" "+(CY-3)+" "+CX+" "+(CY-7)+" Z", fill:"#57c7b2", stroke:"#e8c987", "stroke-width":1.3, "stroke-linejoin":"round"}));
-  em.appendChild(el("circle",{cx:CX-2, cy:CY-1, r:1.7, fill:"#dcfff6"}));
-  c.appendChild(em); uniSvg.appendChild(c);
+  var emTitle = el("title",{}); emTitle.textContent = "La piedra turquesa del origen, engastada en oro"; c.appendChild(emTitle);
+  /* the breathing halo of turquoise light (hidden when motion is calmed) */
+  c.appendChild(el("circle",{cx:CX, cy:CY, r:56, fill:"url(#gemGlow)", "class":"gem-halo"}));
+  /* the dark circle of the composition */
+  c.appendChild(el("circle",{cx:CX, cy:CY, r:34, fill:"#0d1a16"}));
+  /* the stone itself */
+  var gem = el("image",{x:CX-33, y:CY-33, width:66, height:66, "clip-path":"url(#gemClip)", preserveAspectRatio:"xMidYMid slice"});
+  gem.setAttribute("href","assets/piedra-turquesa.webp");
+  gem.setAttributeNS("http://www.w3.org/1999/xlink","xlink:href","assets/piedra-turquesa.webp");
+  c.appendChild(gem);
+  /* a fine gold rim over the edge of the photograph */
+  c.appendChild(el("circle",{cx:CX, cy:CY, r:33, fill:"none", stroke:"rgba(201,168,106,.75)", "stroke-width":1.2}));
+  /* subtle sparkles over the stone */
+  function spark(dx,dy,s,cls){
+    var d = "M0 "+(-6*s)+" L"+(1.6*s)+" "+(-1.6*s)+" L"+(6*s)+" 0 L"+(1.6*s)+" "+(1.6*s)+" L0 "+(6*s)+" L"+(-1.6*s)+" "+(1.6*s)+" L"+(-6*s)+" 0 L"+(-1.6*s)+" "+(-1.6*s)+" Z";
+    return el("path",{d:d, transform:"translate("+(CX+dx)+" "+(CY+dy)+")", fill:"#c9f5ec", "class":cls});
+  }
+  c.appendChild(spark(-15,-13,1,"gem-spark"));
+  c.appendChild(spark(17,-6,.7,"gem-spark s2"));
+  c.appendChild(spark(6,16,.55,"gem-spark s3"));
+  c.appendChild(spark(-19,9,.5,"gem-spark s4"));
+  uniSvg.appendChild(c);
 
   SONGS.forEach(function(s,i){
     var g = el("g",{"class":"node", tabindex:"0", role:"button", "aria-label":"Abrir la ficha de "+s.title});
