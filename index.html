@@ -170,7 +170,7 @@
   .uni-ring{fill:none;stroke:rgba(201,168,106,.10);stroke-dasharray:2 7}
   .uni-root.minor{stroke-dasharray:2 5;animation:flowDash 3.4s linear infinite}
   .gem-halo{transform-box:fill-box;transform-origin:center;animation:gemBreath 6.5s ease-in-out infinite}
-  @keyframes gemBreath{0%,100%{opacity:.45;transform:scale(.94)}50%{opacity:.9;transform:scale(1.07)}}
+  @keyframes gemBreath{0%,100%{opacity:.6;transform:scale(.95)}50%{opacity:1;transform:scale(1.15)}}
   .gem-spark{transform-box:fill-box;transform-origin:center;opacity:0;animation:gemTwinkle 5.5s ease-in-out infinite}
   .gem-spark.s2{animation-delay:1.7s}
   .gem-spark.s3{animation-delay:3.2s}
@@ -472,7 +472,8 @@
   .reduced-motion .map-panel.open{animation:none}
   .reduced-motion .rv{opacity:1;transform:none;transition:none}
   .reduced-motion .pulse-dot{display:none}
-  .reduced-motion .gem-halo,.reduced-motion .gem-spark{display:none}
+  .reduced-motion .gem-halo{animation:none;opacity:.8}
+  .reduced-motion .gem-spark{display:none}
   @media (prefers-reduced-motion: reduce){
     html{scroll-behavior:auto}
     .hero-emblem,.map-route,.eq i,.emblem-ring,.emblem-glow,.uni-root.minor,
@@ -480,7 +481,8 @@
     .hero h1,.hero .author,.hero .lede,.hero .hero-cta,.hero .hero-scroll{animation:none}
     .rv{opacity:1;transform:none;transition:none}
     .pulse-dot{display:none}
-    .gem-halo,.gem-spark{display:none}
+    .gem-halo{animation:none;opacity:.8}
+    .gem-spark{display:none}
   }
 </style>
 </head>
@@ -843,23 +845,24 @@ var nodeEls = [];
     var mx=(CX+p.x)/2 + (p.y-CY)*0.18, my=(CY+p.y)/2 - (p.x-CX)*0.10;
     uniSvg.appendChild(el("path",{d:"M"+CX+" "+CY+" Q"+mx+" "+my+" "+p.x+" "+p.y, "class":"uni-root"}));
   });
-  /* centre emblem: a turquoise cabochon set in an ornate gold ring, like
-     the gems of the logo — a generated image seated in the dark circle,
-     breathing under a soft pulsing turquoise glow with subtle sparkles */
+  /* centre emblem: a faceted, luminous turquoise gem set in an ornate
+     gold ring, like the gems of the logo — a generated image seated in
+     the dark circle, breathing under a pulsing turquoise glow in code,
+     with subtle sparkles. No <title>: nothing may pop up on hover. */
   var defs = el("defs",{});
   var gemClip = el("clipPath",{id:"gemClip"});
   gemClip.appendChild(el("circle",{cx:CX, cy:CY, r:32}));
   defs.appendChild(gemClip);
   var gemGlow = el("radialGradient",{id:"gemGlow"});
-  gemGlow.appendChild(el("stop",{offset:"0%","stop-color":"#57c7b2","stop-opacity":".55"}));
-  gemGlow.appendChild(el("stop",{offset:"55%","stop-color":"#57c7b2","stop-opacity":".18"}));
+  gemGlow.appendChild(el("stop",{offset:"0%","stop-color":"#57c7b2","stop-opacity":".85"}));
+  gemGlow.appendChild(el("stop",{offset:"55%","stop-color":"#57c7b2","stop-opacity":".34"}));
   gemGlow.appendChild(el("stop",{offset:"100%","stop-color":"#57c7b2","stop-opacity":"0"}));
   defs.appendChild(gemGlow);
   uniSvg.appendChild(defs);
   var c = el("g",{});
-  var emTitle = el("title",{}); emTitle.textContent = "La piedra turquesa del origen, engastada en oro"; c.appendChild(emTitle);
-  /* the breathing halo of turquoise light (hidden when motion is calmed) */
-  c.appendChild(el("circle",{cx:CX, cy:CY, r:56, fill:"url(#gemGlow)", "class":"gem-halo"}));
+  /* the breathing halo of turquoise light: it pulses in code around the
+     gem; with calmed motion it stays as a still, soft glow */
+  c.appendChild(el("circle",{cx:CX, cy:CY, r:68, fill:"url(#gemGlow)", "class":"gem-halo"}));
   /* the dark circle of the composition */
   c.appendChild(el("circle",{cx:CX, cy:CY, r:34, fill:"#0d1a16"}));
   /* the stone itself */
